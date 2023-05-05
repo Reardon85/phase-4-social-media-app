@@ -1,7 +1,10 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import Home from './Home';
 import SideBar from './SideBar';
+import Home from './Home';
+import ForYou from './ForYou';
+
+
 function App() {
 
   return (
@@ -9,7 +12,7 @@ function App() {
       <SideBar />
       <Routes>
         <Route path='/' element={<Home />} />
-
+        <Route path='/foryou' element={<ForYou />} />
       </Routes>
     </div>
   );

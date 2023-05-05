@@ -23,6 +23,22 @@ class User(db.Model, SerializerMixin):
                                 secondaryjoin=(followers.c.follower_id == id),
                                 backref=db.backref('followed_by',))
 
+
+    @validates('password')
+    def validates_password(self, key, password):
+        password_str = str(password)
+        if len(password_str) != 7:
+            raise ValueError('Password must be 7 characters')
+        return password
+    
+    @validates('email')
+    def validate_email(self, key, email):
+        if '@' not in email:
+            raise ValueError("Must be valid email address")
+        return email
+    
+    
+
 # Followers association table
 followers = db.Table('followers',
                     db.Column('follower_id', db.Integer, db.ForeignKey('user.id')),

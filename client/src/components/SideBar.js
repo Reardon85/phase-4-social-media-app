@@ -1,11 +1,12 @@
 
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import "./SideBar.css"
+import "./styles/SideBar.css"
 
 function SideBar() {
     return (
         <div className="sidebar">
+            <h1 className='logo'>The Tea</h1>
             <NavLink exact to="/" activeClassName="active">
                 Home
             </NavLink>

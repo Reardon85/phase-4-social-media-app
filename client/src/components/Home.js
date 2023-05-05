@@ -1,11 +1,15 @@
 import React from "react"
-import SideBar from "./SideBar"
+import "./styles/Home.css"
 
 function Home() {
 
     return (
-        <div>
-            <SideBar />
+        <div class="card">
+            <div class="card-image"></div>
+            <div class="category"> Illustration </div>
+            <div class="heading"> A heading that must span over two lines
+                <div class="author"> By <span class="name">Abi</span> 4 days ago</div>
+            </div>
         </div>
     )
 }
