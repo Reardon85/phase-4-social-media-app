@@ -8,7 +8,7 @@ db = SQLAlchemy()
 
 
 
-class User(db.Model):
+class User(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
     email = db.Column(db.String, unique=True, nullable=False)
@@ -29,7 +29,7 @@ followers = db.Table('followers',
                     db.Column('followed_id', db.Integer, db.ForeignKey('user.id'))
                     )
 
-class Post(db.Model):
+class Post(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     image = db.Column(db.String, nullable=False)
     content = db.Column(db.String, nullable=False)
@@ -47,7 +47,7 @@ class Post(db.Model):
 
 
 
-class Comment(db.Model):
+class Comment(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.Text, nullable=False)
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
@@ -60,7 +60,7 @@ class Comment(db.Model):
 
 
 
-class Like(db.Model):
+class Like(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
 
     # user_id foreign key
