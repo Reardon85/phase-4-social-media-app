@@ -4,9 +4,19 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+flask = "*"
+flask-migrate = "*"
 flask-restful = "*"
+flask-sqlalchemy = "*"
+gunicorn = "*"
+honcho = "*"
+importlib-metadata = "*"
+psycopg2-binary = "*"
+python-dotenv = "*"
+sqlalchemy-serializer = "*"
+flask-cors = "*"
 
 [dev-packages]
 
 [requires]
-python_version = "3.8"
+python_version = "3.8.13"
