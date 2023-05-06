@@ -12,7 +12,7 @@ gunicorn = "*"
 honcho = "*"
 importlib-metadata = "*"
 psycopg2-binary = "*"
-python-dotenv = "*"
+python-dotenv = "0.21.0"
 sqlalchemy-serializer = "*"
 flask-cors = "*"
 
