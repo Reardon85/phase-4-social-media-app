@@ -27,6 +27,10 @@ def index(id=0):
     return render_template("index.html")
 
 class Users(Resource):
+#I think the only time we'd use this is if we're implimenting a search feature for a specific user. Where we are letting the front end do the filtering.
+# But if we do then we're only going to want to return a list of usernames. It would be bad practice to let anyone do a get request 
+# that returns all our users passwords(even if they are hashed) and e-mails. will have to consider if want to do a search by username on frontend or backend.
+#  backend faster but frontend will let us do am onchange filter.  
     def get(self):
         users_list = []
         for u in User.query.all():
@@ -47,7 +51,7 @@ class Users(Resource):
         try:
             db.session.add(new_u)
             db.session.commit()
-            return make_response(new_u.to_dict(), 201)
+            return make_response(new_u, 201)
         except Exception as ex:
             return make_response({'error': [ex.__str__()]}, 422)
     
@@ -81,6 +85,9 @@ class UsersById(Resource):
 api.add_resource(UsersById, '/users/<int:id>')
 
 class Posts(Resource):
+#Shouldn't be an issue for our site. But for an actual social media site with millions of posts. You'd never be in a situation where you'd 
+# send a browser request a list with millions of posts. Maybe when we get the "following" table working we alter this so it only returns first 100 posts
+#from the people the user is following. Flask "session" will be storing the "user_id" so we don't need to pass it as parameter in the url. 
     def get(self):
         posts_list = []
         for p in Post.query.all():
@@ -115,6 +122,8 @@ class PostsById(Resource):
             return make_response({"error": "Post not found"}, 404)
         return make_response(p_instance.to_dict(), 200)
 # do we need to get a post by id?
+# - Good point. I guess it depends on how we impliment the whole clicking on a post and making it bigger thing?
+# But you're right, if they are clicking on the post then that means react already has the post's information. 
 
     def delete(self, id):
         post = Post.query.filter_by(id = id).first()
@@ -127,6 +136,9 @@ class PostsById(Resource):
 api.add_resource(PostsById, '/posts/<int:id>')
 
 class Comments(Resource):
+#It's unlikely that we will run into a situation where we will need to return a list containing every comment from every post ever made.
+#Comments will likely be pulled in similar way to how planets were were appended to scientist in  Scientist_by_ID get function in cosmic fun CC
+# Since a commenet will only ever be displayed in connection to the post it lists as it's foreign key. 
     def get(self):
         comments_list = []
         for c in Comment.query.all():
