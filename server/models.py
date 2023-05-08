@@ -8,6 +8,16 @@ db = SQLAlchemy()
 
 
 
+
+
+
+
+
+followers = db.Table('followers',
+                      db.Column('follower_id', db.Integer, db.ForeignKey('user.id')),
+                      db.Column('followed_id', db.Integer, db.ForeignKey('user.id'))
+                      )
+
 class User(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
@@ -17,12 +27,11 @@ class User(db.Model, SerializerMixin):
     # posts relationship
     posts = db.relationship('Post', backref='user', lazy=True)
     # followers relationship
-    # followers = db.relationship('User', 
-    #                             secondary=followers,
-    #                             primaryjoin=(followers.c.followed_id == id),
-    #                             secondaryjoin=(followers.c.follower_id == id),
-    #                             backref=db.backref('followed_by',))
-
+    followers = db.relationship('User', 
+                                secondary=followers,
+                                primaryjoin=(followers.c.followed_id == id),
+                                secondaryjoin=(followers.c.follower_id == id),
+                                backref=db.backref('followed_by',))
 
     @validates('password')
     def validates_password(self, key, password):
@@ -38,12 +47,6 @@ class User(db.Model, SerializerMixin):
         return email
     
     
-
-# # Followers association table
-# followers = db.Table('followers',
-#                     db.Column('follower_id', db.Integer, db.ForeignKey('user.id')),
-#                     db.Column('followed_id', db.Integer, db.ForeignKey('user.id'))
-#                     )
 
 class Post(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -87,4 +90,3 @@ class Like(db.Model, SerializerMixin):
 
     def __repr__(self):
         return f"Like('{self.post_id}', '{self.user_id}')"
-
