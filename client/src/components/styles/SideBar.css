@@ -3,7 +3,7 @@
     top: 0;
     left: 0;
     bottom: 0;
-    width: 200px;
+    width: 250px;
     padding: 20px;
     background-color: #212121;
 }
@@ -13,6 +13,7 @@
     padding: 10px;
     color: #686868;
     text-decoration: none;
+
 }
 
 .sidebar a.active {

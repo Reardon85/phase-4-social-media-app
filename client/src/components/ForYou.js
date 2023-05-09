@@ -5,7 +5,12 @@ import ForYouCard from './ForYouCard'
 
 function ForYou() {
     return (
-        <ForYouCard />
+        <div>
+
+            <ForYouCard />
+            <ForYouCard />
+
+        </div>
     )
 }
 
