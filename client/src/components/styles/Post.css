@@ -1,0 +1,127 @@
+.post-card {
+    width: 350px;
+    margin: 0 auto;
+    text-align: center;
+    border: 1px solid #ccccccf0;
+    padding: 20px;
+    background-color: #fff;
+
+}
+
+.post-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.user-profile-photo {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.post-image {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.post-footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.like-btn,
+.comment-btn {
+    background-color: transparent;
+    border: none;
+    margin-right: 10px;
+    cursor: pointer;
+    flex: 1;
+}
+
+.like-btn i,
+.comment-btn i {
+    margin-right: 5px;
+}
+
+.like-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    border: none;
+    background-color: transparent;
+    position: relative;
+}
+
+.like-btn::after {
+    width: fit-content;
+    height: fit-content;
+    position: absolute;
+    font-size: 15px;
+    color: rgb(80, 80, 80);
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    opacity: 0;
+    visibility: hidden;
+    transition: .2s linear;
+    top: 115%;
+}
+
+.icon {
+    width: 30px;
+    height: 30px;
+    transition: .2s linear;
+}
+
+.icon path {
+    fill: rgba(139, 93, 93, 0.687);
+    transition: .2s linear;
+}
+
+.like-btn:hover>.icon {
+    transform: scale(1.2);
+}
+
+.like-btn:hover>.icon path {
+    fill: rgb(235, 107, 129);
+}
+
+.like-btn:hover::after {
+    visibility: visible;
+    opacity: 1;
+    top: 105%;
+}
+
+
+
+.buttons-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.comments {
+    text-align: left;
+    margin-top: 10px;
+}
+
+.comment {
+    margin-bottom: 10px;
+}
+
+.comment-author {
+    margin-bottom: 5px;
+    font-size: smaller;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif
+}
+
+.comment-text {
+    margin: 0;
+}
