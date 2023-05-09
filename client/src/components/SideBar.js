@@ -21,16 +21,16 @@ function SideBar() {
             </Link>
 
             <NavLink exact to="/" activeClassName="active">
-                Home
+                <img src="./images/home.png" alt="Home Icon" className='icons' /> Home
             </NavLink>
             <NavLink to="/foryou" activeClassName="active">
-                For You
+                <img src="./images/foryou.png" alt="Home Icon" className='icons' /> For You
             </NavLink>
             <NavLink to="/profile" activeClassName="active">
-                Profile
+                <img src="./images/profile.png" alt="Home Icon" className='icons' /> Profile
             </NavLink>
             <NavLink to="/search" activeClassName="active">
-                Search
+                <img src="./images/search.png" alt="Home Icon" className='icons' />Search
             </NavLink>
             <NavLink to="/Logout" activeClassName="active">
                 Logout
