@@ -3,8 +3,12 @@ import { Routes, Route } from 'react-router-dom';
 import SideBar from './SideBar';
 import Home from './Home';
 import ForYou from './ForYou';
+
+import ProfilePage from './ProfilePage';
+
 import Login from './Login';
 import "./styles/SideBar.css"
+
 
 
 
@@ -37,6 +41,7 @@ function App() {
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/foryou' element={<ForYou />} />
+        <Route path='/profile' element={<ProfilePage />} />
       </Routes>
     </div>
   );
