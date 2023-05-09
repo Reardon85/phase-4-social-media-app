@@ -29,6 +29,12 @@ function SideBar() {
             <NavLink to="/profile" activeClassName="active">
                 Profile
             </NavLink>
+            <NavLink to="/search" activeClassName="active">
+                Search
+            </NavLink>
+            <NavLink to="/Logout" activeClassName="active">
+                Logout
+            </NavLink>
         </div>
     );
 }
