@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {Link, Route, Routes, useParams} from "react-router-dom";
 import { useFormik } from "formik";
-import 'semantic-ui-css/semantic.min.css';
+
 import { Button, Form, Grid, Header, Message, Segment } from 'semantic-ui-react'
 import * as yup from "yup";
 import Register from "./Register";
