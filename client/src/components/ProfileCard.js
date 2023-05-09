@@ -2,26 +2,26 @@ import React from 'react'
 import "./styles/ProfileCard.css"
 
 
-function ProfileCard() {
+function ProfileCard({profileInfo}) {
     return (
         <main class="pf-container">
             <div class="pf-card">
-                <img src="https://res.cloudinary.com/alexandracaulea/image/upload/v1582179610/user_fckc9f.jpg" alt="User image" class="card__image" />
+                <img src={profileInfo.avatar_url} alt="User image" class="card__image" />
                 <div class="card__text">
-                    <h2>Alexandra Caulea</h2>
-                    <p>I enjoy drinking a cup of coffee every day</p>
+                    <h2>{profileInfo.username}</h2>
+                    <p>{profileInfo.bio}</p>
                 </div>
                 <ul class="card__info">
                     <li>
-                        <span class="card__info__stats">172</span>
+                        <span class="card__info__stats">{profileInfo.posts}</span>
                         <span>posts</span>
                     </li>
                     <li>
-                        <span class="card__info__stats">47</span>
+                        <span class="card__info__stats">{profileInfo.followers}</span>
                         <span>followers</span>
                     </li>
                     <li>
-                        <span class="card__info__stats">20</span>
+                        <span class="card__info__stats">{profileInfo.following}</span>
                         <span>following</span>
                     </li>
                 </ul>

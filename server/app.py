@@ -117,12 +117,27 @@ class Users(Resource):
     
 api.add_resource(Users, '/users')
 
-class UsersById(Resource):
+class Users_By_Id(Resource):
     def get(self, id):
-        u_instance = User.query.filter_by(id = id).first()
-        if u_instance == None:
+        the_user = User.query.filter_by(id = id).first()
+        if the_user == None:
             return make_response({"error": "User not found"}, 404)
-        return make_response(u_instance.to_dict(), 200)
+        
+        profile_dict = {
+            'profile_info': {
+                'username': the_user.username,
+                'avatar_url': the_user.avatar_url,
+                'bio': the_user.bio,
+                'posts':len(the_user.to_dict(only=("posts",))['posts']),
+                'following':len(the_user.to_dict(only=("following",))['following']),
+                'followers':len(the_user.to_dict(only=("followed_by",))['followed_by'])
+            },
+            'posts': the_user.to_dict(only=("posts",))['posts'],
+            'my_profile': the_user.id == session['user_id']
+
+        }   
+        
+        return make_response(profile_dict, 200)
     def delete(self, id):
         user = User.query.filter_by(id = id).first()
         if user == None:
@@ -142,7 +157,7 @@ class UsersById(Resource):
         db.session.commit()
         return make_response(user_instance.to_dict(), 202)
 
-api.add_resource(UsersById, '/users/<int:id>')
+api.add_resource(Users_By_Id, '/users/<int:id>')
 
 class Posts(Resource):
 #Shouldn't be an issue for our site. But for an actual social media site with millions of posts. You'd never be in a situation where you'd 
