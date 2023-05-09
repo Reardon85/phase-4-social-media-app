@@ -6,7 +6,7 @@ import { Button, Form, Grid, Header, Message, Segment } from 'semantic-ui-react'
 import * as yup from "yup";
 import Register from "./Register";
 
-import "./styles/Login.css"
+// import "./styles/Login.css"
 
 function Login({onLogin}) {
 
