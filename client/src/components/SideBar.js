@@ -3,8 +3,9 @@ import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import "./styles/SideBar.css"
+import Search from './Search';
 
-function SideBar({onLogout, user}) {
+function SideBar({ onLogout, user }) {
 
     const navigate = useNavigate()
     console.log(user.id)
@@ -13,8 +14,8 @@ function SideBar({onLogout, user}) {
 
         fetch('/logout', {
             method: "DELETE",
-        }).then((r) =>{
-            if (r.ok){
+        }).then((r) => {
+            if (r.ok) {
                 onLogout("none")
                 navigate("/")
             }
@@ -51,7 +52,7 @@ function SideBar({onLogout, user}) {
 
             </NavLink>
             <NavLink to="/search" activeClassName="active">
-                <img src="./images/search.png" alt="Home Icon" className='icons' />Search
+                <Search />
             </NavLink>
             <NavLink onClick={handleclick} to="/logout" activeClassName="active">
                 Logout

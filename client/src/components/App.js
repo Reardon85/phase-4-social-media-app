@@ -37,13 +37,13 @@ function App() {
   } else if (user) {
     return (
       <div className="App">
-        <SideBar onLogout={setUser} user={user}  />
+        <SideBar onLogout={setUser} user={user} />
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/foryou' element={<ForYou />} />
-          <Route path= "/profile/:userId" element={<ProfilePage />} />
+          <Route path="/profile/:userId" element={<ProfilePage />} />
           <Route path='/search' element={<Search />} />
-           
+
         </Routes>
       </div>
     );
