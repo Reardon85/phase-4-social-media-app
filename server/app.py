@@ -1,30 +1,78 @@
 import os
 from dotenv import load_dotenv
 load_dotenv()
-from flask import Flask, request, make_response, abort, jsonify, render_template
-from flask_migrate import Migrate
-from flask_restful import Api, Resource
-from models import db, User, Post, Comment, Like
+from flask import request, make_response, abort, jsonify, render_template, session
+from flask_restful import  Resource
+from sqlalchemy.exc import IntegrityError
+from models import User, Post, Comment, Like
+from config import app, db, api
 
-app = Flask(
-    __name__,
-    static_url_path='',
-    static_folder='../client/build',
-    template_folder='../client/build'
-    )
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URI')
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.json.compact = False
 
-migrate = Migrate(app, db)
-api = Api(app)
-db.init_app(app)
+
+
 
 
 @app.route('/')
 @app.route('/<int:id>')
 def index(id=0):
     return render_template("index.html")
+
+
+class Signup(Resource):
+
+    def post(self):
+
+
+
+        try:
+            data = request.get_json()
+            new_user = User(username=data.get('username'), email=data.get('email'))
+            new_user.password_hash = data.get('password')
+            
+            db.session.add(new_user)
+            db.session.commit()
+            
+            session['user_id'] = new_user.id
+            return make_response(new_user.to_dict(), 201)
+        except IntegrityError:
+            return make_response({'error': '422 Unprocessable Entity'}, 422)
+
+
+class CheckSession(Resource):
+
+    def get(self):
+
+        if not session.get('user_id'):
+            return make_response({'error': '401 Unauthorized'}, 401)
+
+        the_user = User.query.filter_by(id=session['user_id']).first()
+        return make_response(the_user.to_dict(), 200)
+    
+class Login(Resource):
+    def post(self):
+
+        data = request.get_json()
+
+        the_user = User.query.filter_by(username=session['username']).first()
+        
+        if not the_user:
+            return make_response({'error':'username does not exist'}, 404)
+        
+        if not the_user.authenticate(data.get('password')):
+            return make_response({'error:': 'Invalid Password'}, 400)
+        
+        return make_response(the_user.to_dict(), 200)
+
+class Logout(Resource):
+    def delete(self):
+        if session.get('user_id'):
+            session['user_id'] = None
+            return make_response({'message': 'Successfully Logged Out'}, 204)
+
+        return make_response({'error':"401 Unauthorized"}, 401)    
+
+
+
 
 class Users(Resource):
 #I think the only time we'd use this is if we're implimenting a search feature for a specific user. Where we are letting the front end do the filtering.
