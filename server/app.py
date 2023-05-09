@@ -4,7 +4,7 @@ load_dotenv()
 from flask import request, make_response, abort, jsonify, render_template, session
 from flask_restful import  Resource
 from sqlalchemy.exc import IntegrityError
-from models import User, Post, Comment, Like
+from models import User, Post, Comment, Like, following
 from config import app, db, api
 
 
@@ -165,15 +165,36 @@ class Posts(Resource):
 #from the people the user is following. Flask "session" will be storing the "user_id" so we don't need to pass it as parameter in the url. 
     def get(self):
         posts_list = []
-        for p in Post.query.all():
-            posts_dict = {
-                'id': p.id,
-                'image': p.image,
-                'content': p.content,
-                'date_posted': p.date_posted
-            }
-            posts_list.append(posts_dict)
+
+        user_id = session['user_id']
+
+        posts = Post.query.join(following, (following.c.followed_id == Post.user_id)).outerjoin(Like, Like.post_id == Post.id) \
+        .filter(following.c.follower_id == user_id).group_by(Post.id).order_by(db.func.count(Like.id).desc()).all()
+
+        post_dicts = [post.to_dict(rules=('like_count',)) for post in posts]
+
+        for post in post_dicts:
+            user = User.query.filter_by(id=post['user_id']).first()
+            user_dict = user.to_dict(only=('avatar_url', 'username'))
+            temp = {**post, **user_dict}
+            posts_list.append(temp)
+
+        print(posts_list)
+
+        # following_users = User.query.filter_by(id=session['user_id']).first().following
+        # [posts_list.extend(follow.to_dict(only=('posts',))['posts']) for follow in following_users]
+        # print(posts_list)
         return make_response(posts_list, 200)
+    
+        # for p in Post.query.all():
+        #     posts_dict = {
+        #         'id': p.id,
+        #         'image': p.image,
+        #         'content': p.content,
+        #         'date_posted': p.date_posted
+        #     }
+        #     posts_list.append(posts_dict)
+        # return make_response(posts_list, 200)
     
     def post(self):
         data = request.get_json()
