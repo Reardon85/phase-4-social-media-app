@@ -3,202 +3,364 @@
 
 
 
-# MABYE DELETE
-####################################################################
+from random import choice as rc, randint
+from models import User, Post, Comment, Like, following
+from faker import Faker
+from config import app, db
 
-# from random import choice as rc, randint
+fake = Faker()
 
-# from faker import Faker
+bio_info = [
+    "I'm a Funny Scientist",
+    "I'm a Dumb Cat Lover",
+    "I Don't Know How To Read!!! LULZ",
+    "I Died 12 Years Ago and my Soul Got Stuck On This Site....",
+    "I'm an Animal Lover who loves to Bike.",
+    "I Use to Own an Airplane",
+    "My Friends Call me Biz.",
+    "I'm a very sad person.....",
+    "Where did all the Cowboy's go?",
+    "Does anyone Remember the movie the Matrix?",
+    "I use to be a Professional Cowboy",
+    "If you Follow me I'll Follow You Back!!!"
+]
 
-# from app import app
-# from models import db, Mission, Planet, Scientist
+profile_pic = [
+'https://the-tea.s3.us-east-2.amazonaws.com/profile1.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/profile10.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/profile11.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/profile12.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/profile13.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/profile14.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/profile15.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/profile16.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/profile18.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/profile17.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/profile19.jpeg',
+'https://the-tea.s3.us-east-2.amazonaws.com/profile2.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/profile20.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/profile21.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/profile22.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/profile23.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/profile24.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/profile25.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/profile26.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/profile27.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/profile29.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/profile28.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/profile3.webp',
+'https://the-tea.s3.us-east-2.amazonaws.com/profile3.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/profile31.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/profile4.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/profile5.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/profile6.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/profile7.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/profile8.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/profile9.jpg'
+]
 
-# fake = Faker()
+content_list= [
+    "Check out this Photo",
+    "I took this when I was traveling",
+    "This was so much fun",
+    "You Know I'm gonna spill that tea",
+    "Best day ever!",
+    "I only wish that you guys could have seen it!",
+    "Just living my best life!",
+    "Feeling blessed and grateful today.",
+    "Exploring new places and making memories.",
+    "Sometimes the best therapy is a long drive and good music.",
+    "Life is short, enjoy the little things.",
+    "Creating moments that will last a lifetime.",
+    "Happiness is a journey, not a destination.",
+    "Life's too short to not take risks.",
+    "Embracing the chaos and loving every minute of it.",
+    "Dream big, work hard, stay focused, and surround yourself with good people.",
+    "The only limit is the one you set for yourself.",
+    "Always trust the journey, even if you don't understand it.",
+    "Life is an adventure, embrace it with open arms.",
+    "You are the artist of your own life, don't be afraid to paint outside the lines.",
+    "Every day is a new opportunity to grow and learn.",
+    "Make every moment count, and never forget to smile.",
+    "Be the reason someone smiles today.",
+    "Believe in yourself and all that you are.",
+    "Chase your dreams and never look back.",
+    "Love yourself, embrace your flaws, and never stop being you."
+]
 
-# scientist_names = [{"name": "John M. Grunsfeld", "field_of_study": "Physics", "avatar": "http://t2.gstatic.com/licensed-image?q=tbn:ANd9GcScR8jJkcRs1jwAMOQNLJHfLF63yFX12gPMImUFf_7657RCGpk9H-JzI_EFsgzb85vG"}, {"name": "Kathryn D. Sullivan", "field_of_study": "Geology", "avatar": "http://t3.gstatic.com/licensed-image?q=tbn:ANd9GcTvBnpKEY3f22XIRw-R-PQgEPKW5WwZIU26r4srUo9ps8QnvziV-8M5YHR_FiJDuUmv"},
-#                    {"name": "Jessica Watkins", "field_of_study": "Geologist", "avatar": "https://upload.wikimedia.org/wikipedia/commons/3/3f/Jessica_Watkins_Official_NASA_Portrait_in_2021_%28cropped%29.jpg"}, {
-#                        "name": "Josh A. Cassada", "field_of_study": "Physics", "avatar": "http://t2.gstatic.com/licensed-image?q=tbn:ANd9GcQtZW2qff5cNijHDMWOqVQljN8OQn-J7OURnrSWGhEhPOpm9VG3doOBJzHFnRWjvYpX"},
-#                    {"name": "Maggie Aderin-Pocock", "field_of_study": "Physics", "avatar": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcTaAMxB1wogeYWozIk8hLGr8JbNWAhQhHZKuOtBbYO482AMAeNO"}, {
-#                        "name": "Karl Gordon Henize", "field_of_study": "Astronomy", "avatar": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Henize.jpg/1200px-Henize.jpg"},
-#                    {"name": "Joseph M Acaba", "field_of_study": "Hydrogeology", "avatar": "http://t1.gstatic.com/licensed-image?q=tbn:ANd9GcTzDn9v_9ITBP-nOTIJwGvrQttCJBiuspb5vXRKwJfG19bO198mZRQPlvnDll0kZeJY"}, {"name": "Sally Ride", "field_of_study": "Physics", "avatar": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSmImcTrOawh1PJyqSDw3fh-GfZfozJ2w9E_jU7B3m3CDC4tDPU"}]
+post_pic = [
+'https://the-tea.s3.us-east-2.amazonaws.com/emb1.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/emb2.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/emb3.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/emb4.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/emb5.webp',
+'https://the-tea.s3.us-east-2.amazonaws.com/emb6.png',
+'https://the-tea.s3.us-east-2.amazonaws.com/image1.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/image1.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/image11.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/image12.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/image2.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/image3.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/image4.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/image5.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/image6.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/image7.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/image8.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/image9.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img13.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img14.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img15.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img16.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img17.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img18.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img19.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img20.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img21.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img22.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img23.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img24.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img25.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img26.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img27.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img29.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img30.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img31.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img32.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img33.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img34.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img35.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img36.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img37.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img38.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img39.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img40.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img41.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img42.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img43.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img44.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img45.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img46.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img47.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img48.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img49.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img50.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img51.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img52.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img53.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img54.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img55.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img56.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img57.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img58.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img59.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img60.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img61.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img62.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img63.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img64.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img65.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img66.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img67.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img68.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img69.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img70.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img71.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img72.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img73.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img74.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img75.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img76.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img77.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img78.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img79.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img80.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img81.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img82.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img83.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img84.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img85.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img86.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img87.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img88.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img89.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img90.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img91.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img92.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img93.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/img94.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/drunk1.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/drunk10.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/drunk11.webp',
+'https://the-tea.s3.us-east-2.amazonaws.com/drunk12.webp',
+'https://the-tea.s3.us-east-2.amazonaws.com/drunk13.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/drunk14.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/drunk15.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/drunk16.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/drunk17.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/drunk19.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/drunk2.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/drunk21.webp',
+'https://the-tea.s3.us-east-2.amazonaws.com/drunk22.webp',
+'https://the-tea.s3.us-east-2.amazonaws.com/drunk23.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/drunk24.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/drunk25.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/drunk26.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/drunk27.webp',
+'https://the-tea.s3.us-east-2.amazonaws.com/drunk28.webp',
+'https://the-tea.s3.us-east-2.amazonaws.com/drunk29.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/drunk3.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/drunk30.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/drunk31.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/drunk32.webp'
+'https://the-tea.s3.us-east-2.amazonaws.com/drunk33.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/drunk4.jpg',
+'https://the-tea.s3.us-east-2.amazonaws.com/drunk5.jpeg',
+'https://the-tea.s3.us-east-2.amazonaws.com/drunk6.jpeg',
+'https://the-tea.s3.us-east-2.amazonaws.com/drunk7.webp',
+'https://the-tea.s3.us-east-2.amazonaws.com/drunk8.webp',
+'https://the-tea.s3.us-east-2.amazonaws.com/drunk9.jpg'
+]
+
+nice_comments = [
+'So beautiful! 😍',
+'Love this angle! 👌',
+'This is giving me all the feels! ❤️',
+'Wow, stunning photo! 📸',
+"You're killing it, girl! 🔥",
+'Goals! 💪',
+'This looks like so much fun!',
+'Where is this? I need to go there! 🌴',
+'That made me smile! 😊',
+'Obsessed with this look!',
+'So jealous, wish I was there! 😩',
+'Incredible shot! 🤩',
+'You are a true inspiration! 💫',
+'I need this in my life!',
+'Can I borrow this image? 😉',
+'This makes me want to book a flight ASAP! ✈️',
+'Gorgeous as always! 💕',
+'This is the definition of vacation goals! 🏖️',
+"You're living your best life! 👏",
+"I can't get enough of this picture!", 
+
+]
+
+bad_comments = [
+"This is hilarious!",
+"I can't stop laughing at this! 🤣",
+"This made my day! 😆",
+"I'm crying laughing! 😭",
+"You always know how to make me laugh!",
+"I needed this laugh, thank you!",
+"How do you come up with this stuff?!", 
+"You're too funny! 😂",
+"I just snorted my drink!", 
+"I can't breathe, this is too funny!",
+"I'm sharing this with all my friends! 😂",
+"You win the internet today! 🏆",
+"This is the best thing I've seen all week!",
+"My sides hurt from laughing so hard!",
+"You're a comedic genius!",
+"I'm going to be laughing about this all day!",
+"This is the type of content I live for! 😂",
+"You're officially my favorite Tea account!",
+"I'm sending this to everyone I know!",
+"You deserve an award for this post!",
+
+]
 
 
-# def make_scientists():
+with app.app_context():
 
-#     Scientist.query.delete()
-
-#     scientists = []
-
-#     for scientist_dict in scientist_names:
-#         scientist = Scientist(
-#             name=scientist_dict["name"],
-#             field_of_study=scientist_dict["field_of_study"],
-#             avatar=scientist_dict["avatar"]
-#         )
-#         scientists.append(scientist)
-
-#     db.session.add_all(scientists)
-#     db.session.commit()
+    print('Deleting All Objects...')
+    db.session.query(following).delete()
 
 
-# planets_list = [
-#     {"name": "Mercury", "image": "planet1",
-#         "distance": "10000 miles"},
-#     {"name": "Venus", "image": "planet2",
-#         "distance": "15000 miles"},
-#     {"name": "Mars", "image": "planet3",
-#         "distance": "200000 miles"},
-#     {"name": "Jupitor", "image": "planet4",
-#         "distance": "30000 miles"},
-#     {"name": "Saturn", "image": "planet5",
-#         "distance": "400000 miles"},
-#     {"name": "Uranus", "image": "planet6",
-#         "distance": "5555555 miles"},
-#     {"name": "Neptune", "image": "planet7",
-#         "distance": "7000000 miles"},
-# ]
-# stars_list = ["Sirius", "Antares", "Betelgeuse",
-#               "Iota Draconis", "Theta Lionis", "Hamal"]
+    Comment.query.delete()
+    Like.query.delete()
+    Post.query.delete()
+    User.query.delete()
 
 
-# def make_planets():
-
-#     Planet.query.delete()
-
-#     planets = []
-
-#     for planet_dict in planets_list:
-#         planet = Planet(
-#             name=planet_dict["name"],
-#             distance_from_earth=planet_dict["distance"],
-#             nearest_star=rc(stars_list),
-#             image=planet_dict["image"]
-#         )
-#         planets.append(planet)
-
-#     db.session.add_all(planets)
-#     db.session.commit()
+    print('Creating User objects...')
 
 
-# def make_missions():
+    users = []
+    posts = []
 
-#     Mission.query.delete()
-#     planets = Planet.query.with_entities(Planet.id).all()
-#     scientists = Scientist.query.with_entities(Scientist.id).all()
+    for i in range(100):
+        user = User(
+            email=fake.email(),
+            username=fake.name(),
+            avatar_url=rc(profile_pic),
+            bio= rc(bio_info)
+        )
+        user.password_hash = "flatiron"
+        users.append(user)
 
-#     missions = []
+    print('Making Each User follow 5 other Users')
 
-#     for i in range(20):
-#         mission = Mission(
-#             name=fake.unique.text(max_nb_chars=20),
-#             scientist_id=rc(scientists)[0],
-#             planet_id=rc(planets)[0]
-#         )
-#         missions.append(mission)
-
-#     db.session.add_all(missions)
-#     db.session.commit()
-
-
-# if __name__ == '__main__':
-#     with app.app_context():
-#         make_scientists()
-#         make_planets()
-#         make_missions()
+    for user in users:
+        for i in range(5):
+            user.following.append(rc(users))
 
 
+    print('Adding User objects to transaction...')
+    db.session.add_all(users)
+    print('Committing transaction...') 
+    db.session.commit() 
+    print('Complete.')
 
+    print("Having Each User make 5 posts")
+    for user in users:
+        for i in range(5):
+            post = Post(
+                user_id = user.id,
+                image=rc(post_pic),
+                content=rc(content_list)
+            )
+            posts.append(post)
 
+    print('Adding Post objects to transaction...')
+    db.session.add_all(posts)
+    print('Committing transaction...') 
+    db.session.commit() 
+    print('Complete.')
 
+    print("Creating 5,000 randomly assigned Likes")
+    likes = []
 
+    for i in range(5000):
 
+        like = Like(
+            user_id= rc(users).id,
+            post_id= rc(posts).id
+        )
+        likes.append(like)
 
+    print('Adding Like objects to transaction...')
+    db.session.add_all(likes)
+    print('Committing transaction...') 
+    db.session.commit() 
+    print('Complete.')
 
+    print("Creating 1,000 randomly assigned comments ")
 
+    comments = []
 
-
-
-# Actually has email in it 
-###################################################################
-
-# import email
-# from random import choice as rc, randint
-
-# from faker import Faker
-
-# from app import app
-# from models import db, Customer
-
-
-# fake = Faker()
-
-# usernames = [fake.first_name() for i in range(4)]
-# if "Duane" not in usernames:
-#     usernames.append("Duane")
-
-# def make_customers():
-
-#     Customer.query.delete()
+    for i in range(1000):
+        comment = Comment(
+            user_id= rc(users).id,
+            post_id= rc(posts).id,
+            content= rc(nice_comments)
+        )
+        comments.append(comment)
     
-#     customers = []
+    print('Adding Comment objects to transaction...')
+    db.session.add_all(comments)
+    print('Committing transaction...') 
+    db.session.commit() 
+    print('Complete.')
 
-#     for i in range(3):
-#         customer = Customer(
-#             email=fake.email(),
-#             age= randint(0, 125),
-#             name=fake.name()
-#         )
-#         customers.append(customer)
+    
 
-#     db.session.add_all(customers)
-#     db.session.commit()        
-
-# if __name__ == '__main__':
-#     with app.app_context():
-#         make_customers()
-
-
-
-
-
-#Prints useful messages 
-###########################################################
-
-
-# from app import app
-# from models import db, Bird
-
-# db.init_app(app)
-
-# with app.app_context():
-
-#     print('Deleting existing birds...')
-#     Bird.query.delete()
-
-#     print('Creating bird objects...')
-#     chickadee = Bird(
-#         name='Black-Capped Chickadee',
-#         species='Poecile Atricapillus',
-#         image='/images/black-capped-chickadee.jpeg'
-#     )
-#     grackle = Bird(
-#         name='Grackle',
-#         species='Quiscalus Quiscula',
-#         image='/images/grackle.jpeg'
-#     )
-#     starling = Bird(
-#         name='Common Starling',
-#         species='Sturnus Vulgaris',
-#         image='/images/starling.jpeg'
-#     )
-#     dove = Bird(
-#         name='Mourning Dove',
-#         species='Zenaida Macroura',
-#         image='/images/dove.jpeg'
-#     )
-
-#     print('Adding bird objects to transaction...')
-#     db.session.add_all([chickadee, grackle, starling, dove])
-#     print('Committing transaction...')
-#     db.session.commit()
-#     print('Complete.')

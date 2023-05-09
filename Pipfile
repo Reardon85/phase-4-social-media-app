@@ -16,8 +16,9 @@ python-dotenv = "0.21.0"
 sqlalchemy-serializer = "*"
 flask-cors = "*"
 flask-bcrypt = "*"
+faker = "*"
 
 [dev-packages]
 
 [requires]
-python_version = "3.7.10"
+python_version = "3.8.13"
