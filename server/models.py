@@ -9,15 +9,11 @@ from config import db, bcrypt
 
 
 
-metadata = MetaData(naming_convention={
-    "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
-})
-db = SQLAlchemy(metadata=metadata)
 
 
 
 
-followers = db.Table('followers',
+following = db.Table('following',
                       db.Column('follower_id', db.Integer, db.ForeignKey('users.id')),
                       db.Column('followed_id', db.Integer, db.ForeignKey('users.id'))
                       )
@@ -25,7 +21,7 @@ followers = db.Table('followers',
 class User(db.Model, SerializerMixin):
     __tablename__= 'users'
 
-    serialize_rules= ('-_password_hash',)
+    serialize_rules= ('-_password_hash', '-following', '-followed_by', '-posts')
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, nullable=False)
@@ -37,10 +33,10 @@ class User(db.Model, SerializerMixin):
     # posts relationship
     posts = db.relationship('Post', backref='user', lazy=True)
     # followers relationship
-    followers = db.relationship('User', 
-                                secondary=followers,
-                                primaryjoin=(followers.c.followed_id == id),
-                                secondaryjoin=(followers.c.follower_id == id),
+    following = db.relationship('User', 
+                                secondary=following,
+                                primaryjoin=(following.c.followed_id == id),
+                                secondaryjoin=(following.c.follower_id == id),
                                 backref=db.backref('followed_by',))
     
     @hybrid_property
@@ -52,7 +48,7 @@ class User(db.Model, SerializerMixin):
         password_hash = bcrypt.generate_password_hash(
             password.encode('utf-8')
         )
-        self._password_hash = password.decode('utf-8')
+        self._password_hash = password_hash.decode('utf-8')
 
     def authenticate(self, password):
         return bcrypt.check_password_hash(

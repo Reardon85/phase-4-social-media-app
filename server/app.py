@@ -37,23 +37,32 @@ class Signup(Resource):
         except IntegrityError:
             return make_response({'error': '422 Unprocessable Entity'}, 422)
 
+api.add_resource(Signup, '/signup')
 
 class CheckSession(Resource):
 
     def get(self):
 
-        if not session.get('user_id'):
-            return make_response({'error': '401 Unauthorized'}, 401)
+        if not session['user_id']:
+            return make_response({'error': ' test 401 Unauthorized'}, 401)
 
         the_user = User.query.filter_by(id=session['user_id']).first()
+        print("following:")
+        print(the_user.following)
+        print("Followed by")
+        print(the_user.followed_by)
+        print(the_user.avatar_url)
+        print(the_user.bio)
         return make_response(the_user.to_dict(), 200)
+    
+api.add_resource(CheckSession, '/check_session')
     
 class Login(Resource):
     def post(self):
 
         data = request.get_json()
 
-        the_user = User.query.filter_by(username=session['username']).first()
+        the_user = User.query.filter_by(username=data.get('username')).first()
         
         if not the_user:
             return make_response({'error':'username does not exist'}, 404)
@@ -61,7 +70,10 @@ class Login(Resource):
         if not the_user.authenticate(data.get('password')):
             return make_response({'error:': 'Invalid Password'}, 400)
         
+        session['user_id'] = the_user.id
         return make_response(the_user.to_dict(), 200)
+    
+api.add_resource(Login, '/login')
 
 class Logout(Resource):
     def delete(self):
@@ -72,7 +84,7 @@ class Logout(Resource):
         return make_response({'error':"401 Unauthorized"}, 401)    
 
 
-
+api.add_resource(Logout, '/logout')
 
 class Users(Resource):
 #I think the only time we'd use this is if we're implimenting a search feature for a specific user. Where we are letting the front end do the filtering.
