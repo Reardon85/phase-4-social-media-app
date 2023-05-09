@@ -31,20 +31,19 @@ function App() {
       })
   }, [])
 
-  console.log(user)
 
   if (user === "none") {
-    return <Login onLogin={setUser} />
+    return <Login onLogin={setUser} user={user} />
   } else if (user) {
     return (
       <div className="App">
-        <SideBar />
+        <SideBar onLogout={setUser} user={user}  />
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/foryou' element={<ForYou />} />
-          <Route path='/profile' element={<ProfilePage />} />
+          <Route path= "/profile/:userId" element={<ProfilePage />} />
           <Route path='/search' element={<Search />} />
-
+           
         </Routes>
       </div>
     );

@@ -75,6 +75,8 @@ class User(db.Model, SerializerMixin):
 class Post(db.Model, SerializerMixin):
     __tablename__= 'posts'
 
+    serialize_rules= ('-user', '-likes', '-comments')
+
     id = db.Column(db.Integer, primary_key=True)
     image = db.Column(db.String, nullable=False)
     content = db.Column(db.String, nullable=False)

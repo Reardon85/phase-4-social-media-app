@@ -1,10 +1,28 @@
 
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import "./styles/SideBar.css"
 
-function SideBar() {
+function SideBar({onLogout, user}) {
+
+    const navigate = useNavigate()
+    console.log(user.id)
+
+    const handleclick = () => {
+
+        fetch('/logout', {
+            method: "DELETE",
+        }).then((r) =>{
+            if (r.ok){
+                onLogout("none")
+                navigate("/")
+            }
+        })
+
+    }
+
+
     return (
         <div className="sidebar">
             <Link to="/">
@@ -26,13 +44,13 @@ function SideBar() {
             <NavLink to="/foryou" activeClassName="active">
                 For You
             </NavLink>
-            <NavLink to="/profile" activeClassName="active">
+            <NavLink to={`/profile/${user.id}`} activeClassName="active">
                 Profile
             </NavLink>
             <NavLink to="/search" activeClassName="active">
                 Search
             </NavLink>
-            <NavLink to="/Logout" activeClassName="active">
+            <NavLink onClick={handleclick} to="/logout" activeClassName="active">
                 Logout
             </NavLink>
         </div>
