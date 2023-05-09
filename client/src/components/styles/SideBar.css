@@ -17,10 +17,25 @@
 
 .sidebar a.active {
     font-weight: bold;
-    color: #dae1c1;
+    color: #ebeee1;
 }
 
 .logo {
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
     color: #91A93C;
+    display: inline-block;
+}
+
+.logo-img {
+    width: 30px;
+    height: 30px;
+    display: inline-block;
+    margin-left: 10px;
+    vertical-align: middle;
+    margin-bottom: 15px;
+    transition: transform 0.2s ease-in-out;
+}
+
+.logo-img:hover {
+    transform: scale(1.1);
 }
