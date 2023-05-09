@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import {Link, Route, Routes, useParams} from "react-router-dom";
+import { Link, Route, Routes, useParams } from "react-router-dom";
 import { useFormik } from "formik";
 import { Button, Form, Grid, Header, Image, Message, Segment } from 'semantic-ui-react'
 import * as yup from "yup";
 import "./styles/Register.css"
 
-function Register({setRegister, onLogin}) {
+function Register({ setRegister, onLogin }) {
 
     const [refreshPage, setRefreshPage] = useState(false)
     const [errors, setErrors] = useState([])
@@ -13,7 +13,7 @@ function Register({setRegister, onLogin}) {
     // do we needs this? Maybe we do if you refresh the page while on this route. 
     // in which case it will be used to check_session. but probably not? maybe
     // this will work on app.js?
-    useEffect(()=> {
+    useEffect(() => {
 
 
     }, [refreshPage])
@@ -33,10 +33,10 @@ function Register({setRegister, onLogin}) {
 
     const formik = useFormik({
         initialValues: {
-            username:"",
-            email:"",
-            password:"",
-            confirm:"",
+            username: "",
+            email: "",
+            password: "",
+            confirm: "",
         },
         validationSchema: formSchema,
         onSubmit: (values) => {
@@ -49,79 +49,79 @@ function Register({setRegister, onLogin}) {
                 },
                 body: JSON.stringify(values, null, 2)
             })
-            .then((res)=>{
-                if(res.ok){
-                    //might want to set refresh page here
-                    res.json().then((user)=>{
-                        //fill this in with return data or set data
-                        onLogin(user)
-                    })
-                }
-                else{
-                    res.json().then((err)=> setErrors(err.error))
-                }
-            });
+                .then((res) => {
+                    if (res.ok) {
+                        //might want to set refresh page here
+                        res.json().then((user) => {
+                            //fill this in with return data or set data
+                            onLogin(user)
+                        })
+                    }
+                    else {
+                        res.json().then((err) => setErrors(err.error))
+                    }
+                });
         },
 
     });
 
     return (
         <Grid textAlign='center' style={{ height: '100vh' }} verticalAlign='middle'>
-        <Grid.Column style={{ maxWidth: 450 }}>
-            <Header as='h2' color='black' textAlign='center'>
-                {/* <Image src={logo}  /> */} Register Account
-            </Header>
-            <Form size='large' onSubmit={formik.handleSubmit}>
-                <Segment stacked>
-                    <Form.Input
-                        fluid icon='user'
-                        iconPosition='left'
-                        placeholder='User Name'
-                        name="username"
-                        value={formik.values.username}
-                        onChange={formik.handleChange}
-                    />
-                    <Form.Input
-                        fluid icon='user'
-                        iconPosition='left'
-                        placeholder='E-mail address'
-                        name="email"
-                        value={formik.values.email}
-                        onChange={formik.handleChange}
-                    />
-                    <Form.Input
-                        fluid
-                        icon='lock'
-                        iconPosition='left'
-                        placeholder='Password'
-                        type='password'
-                        name='password'
-                        value={formik.values.password}
-                        onChange={formik.handleChange}
-                    />
-                    <Form.Input
-                        fluid
-                        icon='lock'
-                        iconPosition='left'
-                        placeholder='Password Confirmation'
-                        type='password'
-                        name="confirm"
-                        value={formik.values.confirm}
-                        onChange={formik.handleChange}
-                    />
+            <Grid.Column style={{ maxWidth: 450 }}>
+                <Form size='large' onSubmit={formik.handleSubmit}>
+                    <Header as='h2' color='black' textAlign='center'>
+                        {/* <Image src={logo}  /> */} Register Account
+                    </Header>
+                    <Segment stacked>
+                        <Form.Input
+                            fluid icon='user'
+                            iconPosition='left'
+                            placeholder='User Name'
+                            name="username"
+                            value={formik.values.username}
+                            onChange={formik.handleChange}
+                        />
+                        <Form.Input
+                            fluid icon='user'
+                            iconPosition='left'
+                            placeholder='E-mail address'
+                            name="email"
+                            value={formik.values.email}
+                            onChange={formik.handleChange}
+                        />
+                        <Form.Input
+                            fluid
+                            icon='lock'
+                            iconPosition='left'
+                            placeholder='Password'
+                            type='password'
+                            name='password'
+                            value={formik.values.password}
+                            onChange={formik.handleChange}
+                        />
+                        <Form.Input
+                            fluid
+                            icon='lock'
+                            iconPosition='left'
+                            placeholder='Password Confirmation'
+                            type='password'
+                            name="confirm"
+                            value={formik.values.confirm}
+                            onChange={formik.handleChange}
+                        />
 
 
 
-                    <Button color='black' fluid size='large'>
-                        Login
-                    </Button>
-                </Segment>
-            </Form>
-          <Message>
-            Already Have An Account? <Button onClick={()=> setRegister(false)}>Log In</Button>
-          </Message>
-        </Grid.Column>
-    </Grid>
+                        <Button className="login-btn" color='black' fluid size='large'>
+                            Register
+                        </Button>
+                    </Segment>
+                    <Message className="message" >
+                        Already Have An Account? <Button className="login-btn1" onClick={() => setRegister(false)}>Log In</Button>
+                    </Message>
+                </Form>
+            </Grid.Column>
+        </Grid>
     )
 }
 
