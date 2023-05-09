@@ -33,22 +33,22 @@ function App() {
 
   console.log(user)
 
-  if (user === "none") {
-    return <Login onLogin={setUser} />
-  } else if (user) {
-    return (
-      <div className="App">
-        <SideBar />
-        <Routes>
-          <Route path='/' element={<Home />} />
-          <Route path='/foryou' element={<ForYou />} />
-          <Route path='/profile' element={<ProfilePage />} />
-          <Route path='/search' element={<Search />} />
+  // if (user === "none") {
+  //   return <Login onLogin={setUser} />
+  // } else if (user) {
+  return (
+    <div className="App">
+      <SideBar />
+      <Routes>
+        <Route path='/' element={<Home />} />
+        <Route path='/foryou' element={<ForYou />} />
+        <Route path='/profile' element={<ProfilePage />} />
+        <Route path='/search' element={<Search />} />
 
-        </Routes>
-      </div>
-    );
-  }
-};
+      </Routes>
+    </div>
+  );
+}
+// };
 
 export default App;
