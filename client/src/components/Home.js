@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react"
+import React, { useEffect, useState } from "react"
 import "./styles/Home.css"
 import Post from "./Post"
 function Home() {
@@ -8,34 +8,25 @@ function Home() {
     useEffect(() => {
 
         fetch('/posts')
-        .then((r) => {
-            if(r.ok){
-                r.json().then((data) => {
+            .then((r) => {
+                if (r.ok) {
+                    r.json().then((data) => {
 
-                    setPosts(data)
-                })
-            }
-        })
-
-
-
-    },[])
+                        setPosts(data)
+                    })
+                }
+            })
+    }, [])
 
 
     const post_array = posts.length > 0 ? posts.map((post) => {
 
-        return <Post key={post.id} {...post}/>
+        return <Post key={post.id} {...post} />
     }) : <></>
 
     return (
         <div class="card">
-            
             {post_array}
-
-            {/* <Post />
-            <Post />
-            <Post /> */}
-
         </div>
     )
 }
