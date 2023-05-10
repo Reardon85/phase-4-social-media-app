@@ -92,16 +92,20 @@ body {
 }
 
 .card__info {
-    margin: 1em 0;
     list-style-type: none;
     padding: 0;
+    justify-content: space-between;
+    margin-left: 14%;
+    margin-top: 1em;
 }
 
 .card__info li {
     display: inline-block;
     text-align: center;
-    padding: 0.5em;
+    padding: 0em;
+    margin-right: 50px;
 }
+
 
 .card__info__stats {
     color: var(--main-accent-color);
