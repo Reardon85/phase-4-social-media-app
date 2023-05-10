@@ -4,6 +4,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import "./styles/SideBar.css"
 import Search from './Search';
+import Logo from './Logo';
 
 function SideBar({ onLogout, user }) {
 

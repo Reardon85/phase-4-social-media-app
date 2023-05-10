@@ -1,7 +1,10 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import './styles/Search.css'
 
 function Search() {
+
+
+
     return (
         <div className="s-cont">
             <div class="sinput-container">

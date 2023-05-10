@@ -14,9 +14,9 @@ from config import db, bcrypt
 
 
 following = db.Table('following',
-                      db.Column('follower_id', db.Integer, db.ForeignKey('users.id')),
-                      db.Column('followed_id', db.Integer, db.ForeignKey('users.id'))
-                      )
+                    db.Column('follower_id', db.Integer, db.ForeignKey('users.id')),
+                    db.Column('followed_id', db.Integer, db.ForeignKey('users.id'))
+                    )
 
 class User(db.Model, SerializerMixin):
     __tablename__= 'users'
