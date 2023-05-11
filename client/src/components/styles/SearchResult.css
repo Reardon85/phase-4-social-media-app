@@ -17,6 +17,11 @@
     box-shadow: 2px 2px 10px #ccc;
     padding: 10px;
     background-color: #e8e8e8;
+    transition: ease-in-out;
+}
+
+.voice-chat-card:hover {
+    background-color: #c8e1b0;
 }
 
 .voice-chat-card-header {
