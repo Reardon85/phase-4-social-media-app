@@ -5,11 +5,13 @@ import Home from './Home';
 import ForYou from './ForYou';
 import Search from './Search';
 
+
 import ProfilePage from './ProfilePage';
 import Create from './Create';
 
 import Login from './Login';
 import "./styles/SideBar.css"
+import PostCard from './PostCard';
 
 
 
@@ -44,7 +46,8 @@ function App() {
         <Routes>
           <Route path='/' element={<Home setRefreshStage={setRefrehState} refreshState={refreshState} />} />
           <Route path='/foryou' element={<ForYou />} />
-          <Route path="/profile/:userId" element={<ProfilePage setRefreshStage={setRefrehState} refreshState={refreshState}  />} />
+          <Route path="/profile/:userId" element={<ProfilePage setRefreshStage={setRefrehState} refreshState={refreshState} />} />
+          <Route path='/post/:postId' element={<PostCard setRefreshStage={setRefrehState} refreshState={refreshState} />} />
           <Route path='/create' element={<Create />} />
           <Route path='/search' element={<Search />} />
 
