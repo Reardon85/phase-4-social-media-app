@@ -47,10 +47,13 @@ function SideBar({ onLogout, user }) {
                     />
                 </div>
             </Link>
+            <Search />
 
             <NavLink exact to="/" activeClassName="active">
                 <img src="/images/home.png" alt="Home Icon" className='icons' /> Home
             </NavLink>
+
+
             <NavLink to="/foryou" activeClassName="active">
                 <img src="/images/foryou.png" alt="Home Icon" className='icons' /> For You
             </NavLink>
@@ -61,14 +64,13 @@ function SideBar({ onLogout, user }) {
 
             </NavLink>
 
-            <Search />
-
-
             <NavLink to={`/create`} activeClassName="active">
 
-                <img src="/images/profile.png" alt="Home Icon" className='icons' /> Create
+                <img src="/images/plus.png" alt="Home Icon" className='icons' /> Create
 
             </NavLink>
+
+
 
 
 
