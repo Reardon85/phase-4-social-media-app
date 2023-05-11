@@ -1,0 +1,26 @@
+
+    {
+        "posts": [
+        {
+        "id": 1,
+        "username": "regansvoboda",
+        "caption": "Hello!",
+        "likes": 200,
+        "image": "https://pbs.twimg.com/profile_images/1387922816897585152/paNasUAF_400x400.jpg"
+        },
+        {
+        "id": 2,
+        "username": "regans",
+        "caption": "Hello!",
+        "likes": 11,
+        "image": "https://pbs.twimg.com/profile_images/1387922816897585152/paNasUAF_400x400.jpg"
+        },
+        {
+        "id": 3,
+        "username": "regansvoboda",
+        "caption": "Hello!",
+        "likes": 200,
+        "image": "https://pbs.twimg.com/profile_images/1387922816897585152/paNasUAF_400x400.jpg"
+        }
+]
+}

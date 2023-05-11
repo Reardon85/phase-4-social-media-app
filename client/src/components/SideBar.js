@@ -38,13 +38,25 @@ function SideBar({ onLogout, user }) {
             <Link to="/">
                 <div className="logo-container">
                     <h1 className="logo">The Tea</h1>
-                    <img
-                        src="/images/logo1.png"
-                        alt="Logo"
-                        className="logo-img"
-                        width="30px"
-                        height="30px"
-                    />
+                <div class="loader"></div>
+                <div class="steaming-coffee">
+                   <div class="cup"></div>
+                   <div class="saucer"></div>
+                <div class="test">
+                <div class="steam">
+                   <div class="one"></div>
+                   <div class="two"></div>
+                   </div>
+                <div class="steam-2">
+                   <div class="one"></div>
+                   <div class="two"></div>
+                   </div>
+                <div class="steam-3">
+                   <div class="one"></div>
+                   <div class="two"></div>
+                   </div>
+                </div>
+                </div>
                 </div>
             </Link>
             <Search />
