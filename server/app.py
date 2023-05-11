@@ -190,8 +190,10 @@ class Posts(Resource):
 
         user_id = session['user_id']
 
-        posts = Post.query.join(following, (following.c.followed_id == Post.user_id)).outerjoin(Like, Like.post_id == Post.id) \
-        .filter(following.c.follower_id == user_id).group_by(Post.id).order_by(db.func.count(Like.id).desc()).all()
+        posts = Post.query.join(following, (following.c.follower_id == Post.user_id)).outerjoin(Like, Like.post_id == Post.id) \
+        .filter(following.c.followed_id == user_id).group_by(Post.id).order_by(db.func.count(Like.id).desc()).all()
+
+        print(len(posts))
 
         post_dicts = [post.to_dict(rules=('like_count',)) for post in posts]
 
@@ -201,7 +203,7 @@ class Posts(Resource):
             temp = {**post, **user_dict}
             posts_list.append(temp)
 
-        print(posts_list)
+  
 
         # following_users = User.query.filter_by(id=session['user_id']).first().following
         # [posts_list.extend(follow.to_dict(only=('posts',))['posts']) for follow in following_users]
@@ -320,8 +322,7 @@ class Follow_By_Id(Resource):
         the_User.following.remove(follow_user)
         db.session.commit()
 
-        # follow_obj = db.session.query(following).filter_by(follower_id=session['user_id']).filter_by(followed_id=id)
-        # print(follow_obj)
+
 
 api.add_resource(Follow_By_Id, '/follow/<int:id>')
 
