@@ -39,7 +39,7 @@ function ProfilePage() {
 
 
 
-    }, [refreshState])
+    }, [refreshState, userId])
 
     function handleFollow(following){
         console.log("workings")
