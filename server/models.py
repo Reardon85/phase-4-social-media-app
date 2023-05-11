@@ -1,5 +1,5 @@
 from sqlalchemy.ext.hybrid import hybrid_property
-from datetime import datetime
+from datetime import datetime, timedelta
 from sqlalchemy.orm import validates
 from sqlalchemy_serializer import SerializerMixin
 from config import db, bcrypt
@@ -27,8 +27,9 @@ class User(db.Model, SerializerMixin):
     username = db.Column(db.String, nullable=False)
     email = db.Column(db.String, unique=True, nullable=False)
     _password_hash = db.Column(db.String)
-    avatar_url = db.Column(db.String)
+    avatar_url = db.Column(db.String, default='https://the-tea.s3.us-east-2.amazonaws.com/user_icon.png')
     bio = db.Column(db.String)
+    last_request = db.Column(db.DateTime, default=datetime.utcnow)
 
     # posts relationship
     posts = db.relationship('Post', backref='user', lazy=True)
@@ -54,6 +55,28 @@ class User(db.Model, SerializerMixin):
         return bcrypt.check_password_hash(
             self._password_hash, password.encode('utf-8')
         )
+
+    def active_recently(self):
+        diff =  self.last_request - datetime.now()
+
+
+        print(diff)
+        if diff < timedelta(minutes=30):
+            return True
+        else:
+            return False
+        
+    def update_activity(self):
+        self.last_request= datetime.now()
+        db.session.add(self)
+        db.session.commit()
+
+    def logged_off(self):
+        self.last_request = self.last_request + timedelta(minutes=100)
+
+        print("logging off")
+        db.session.add(self)
+        db.session.commit()
 
     # @validates('password')
     # def validates_password(self, key, password):
@@ -113,19 +136,33 @@ class Comment(db.Model, SerializerMixin):
 
 
 
+
 class Like(db.Model, SerializerMixin):
-    __tablename__= 'likes'
-
-    serialize_rules= ('-user', '-post')
-
-
+    __tablename__ = 'likes'
+    serialize_rules = ('-user', '-post')
     id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    post_id = db.Column(db.Integer, db.ForeignKey('posts.id'))
 
-    # user_id foreign key
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    __table_args__ = (db.UniqueConstraint('user_id', 'post_id'),)
 
-    # post_id foreign key
-    post_id = db.Column(db.Integer, db.ForeignKey('posts.id'), nullable=False)
+
+
+
+# class Like(db.Model, SerializerMixin):
+#     __tablename__ = 'likes'
+
+
+
+#     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+
+#     # user_id foreign key
+#     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+
+#     # post_id foreign key
+#     post_id = db.Column(db.Integer, db.ForeignKey('posts.id'), nullable=False)
+
+
 
     def __repr__(self):
         return f"Like('{self.post_id}', '{self.user_id}')"
