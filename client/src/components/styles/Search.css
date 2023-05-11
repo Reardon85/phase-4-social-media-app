@@ -2,7 +2,7 @@
     position: relative;
     display: flex;
     align-items: center;
-    margin-left: -5px;
+    margin-left: 15px;
 }
 
 .sinput {
@@ -30,7 +30,6 @@
     background-color: #fff;
     border: 1px solid rgb(196, 196, 196);
     width: 290px;
-    cursor: none;
     padding: 18px 16px 18px 40px;
 }
 

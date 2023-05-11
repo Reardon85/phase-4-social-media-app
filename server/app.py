@@ -91,17 +91,15 @@ class Users(Resource):
 # But if we do then we're only going to want to return a list of usernames. It would be bad practice to let anyone do a get request 
 # that returns all our users passwords(even if they are hashed) and e-mails. will have to consider if want to do a search by username on frontend or backend.
 #  backend faster but frontend will let us do am onchange filter.  
+
+
+
     def get(self):
-        users_list = []
-        for u in User.query.all():
-            users_dict = {
-                'id': u.id,
-                'name': u.name,
-                'email': u.email,
-                'password': u.password
-            }
-            users_list.append(users_dict)
-        return make_response(users_list, 200)
+        users = [user.to_dict(only=("id", "avatar_url", "username")) for user in User.query.all()]
+        total = len(users)
+        total_dict = {"total": total, "users": users}
+        return make_response(total_dict, 200)
+    
     
     def post(self):
         data = request.get_json()

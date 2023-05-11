@@ -50,19 +50,22 @@ body {
 }
 
 .pf-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, auto));
+    max-width: 600px;
+
     justify-content: center;
     align-items: center;
-    height: 100vh;
+
     text-align: center;
-    margin-bottom: 50px;
+
+    margin: auto;
+    margin-top: 5%;
+    margin-left: 41.5%;
 }
 
 .pf-card {
     padding: 1em;
     border-radius: 0.8em;
-    background-color: #fefefe;
+    background-color: #f5fbee;
     box-shadow: 0 2.8px 2.2px rgba(0, 0, 0, 0.02),
         0 6.7px 5.3px rgba(0, 0, 0, 0.028), 0 12.5px 10px rgba(0, 0, 0, 0.035),
         0 22.3px 17.9px rgba(0, 0, 0, 0.042), 0 41.8px 33.4px rgba(0, 0, 0, 0.05),
@@ -85,19 +88,24 @@ body {
 .card__image {
     width: 100px;
     border-radius: 50%;
+    height: 100px;
 }
 
 .card__info {
-    margin: 1em 0;
     list-style-type: none;
     padding: 0;
+    justify-content: space-between;
+    margin-left: 14%;
+    margin-top: 1em;
 }
 
 .card__info li {
     display: inline-block;
     text-align: center;
-    padding: 0.5em;
+    padding: 0em;
+    margin-right: 50px;
 }
+
 
 .card__info__stats {
     color: var(--main-accent-color);

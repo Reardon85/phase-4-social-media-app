@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from 'react'
+
 import {useParams, useNavigate } from "react-router-dom";
+
 import "./styles/ProfilePage.css"
 import ProfileCard from './ProfileCard'
 import ForYouCard from './ForYouCard'
 function ProfilePage() {
 
-    const {userId} = useParams();
+    const { userId } = useParams();
     const [profileInfo, setProfileInfo] = useState({})
+
     const[postList, setPostList] = useState([])
     const [amFollowing, setAmFollowing] = useState([false, true])
     const [refreshState, setRefrehState] = useState(false)
+
 
     const navigate = useNavigate()
 
@@ -21,6 +25,7 @@ function ProfilePage() {
         console.log("Hello?")
 
         fetch(`/users/${userId}`)
+
         .then((r) => {
             if (r.ok){
                 r.json().then((data) =>{ 
@@ -31,6 +36,7 @@ function ProfilePage() {
                 })
             }
         })
+
 
 
     }, [refreshState])
@@ -78,7 +84,9 @@ function ProfilePage() {
 
     return (
         <div className='profile-page'>
+
             <ProfileCard profileInfo={profileInfo} amFollowing={amFollowing} handleFollow={handleFollow} handleSettings={handleSettings} />
+
 
         </div>
     )
