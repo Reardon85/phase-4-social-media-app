@@ -27,3 +27,4 @@ SQLAlchemy-serializer==1.4.1
 typing_extensions==4.5.0
 Werkzeug== 2.3.3 ; python_version >= '3.8'
 zipp==3.15.0
+boto3 ==1.26.130
