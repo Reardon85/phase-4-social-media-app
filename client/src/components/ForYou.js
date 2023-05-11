@@ -29,7 +29,7 @@ function ForYou() {
         <div>
 
             <div className="image-grid">{post_array}</div>;
-            <button className="more-btn" onClick={() => setTotal((total) => total + 21)}>
+            <button className="more-btnn" onClick={() => setTotal((total) => total + 21)}>
                 {morePosts ? "MORE POSTS" : "NO MORE POSTS"}
             </button>
         </div>
