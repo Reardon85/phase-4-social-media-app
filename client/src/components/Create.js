@@ -1,19 +1,7 @@
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 import React, { useRef } from 'react';
+import "./styles/Create.css"
 
 function getUploadUrl(contentType) {
     return fetch('/aws-url', {
@@ -52,11 +40,13 @@ const Create = () => {
     };
 
     return (
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', flexDirection: 'column' }}>
-            <h1>Upload an Image</h1>
-            <input type="file" ref={fileInput} />
-            <button onClick={uploadImage}>Upload</button>
-        </div>
+        <div class="upload-container">
+        <h1>Upload an Image</h1>
+        <input type="file" ref={fileInput} />
+        <input type="text" placeholder="Add a caption" />
+        <button onClick={uploadImage}>Upload</button>
+    </div>
+    
     );
 };
 
