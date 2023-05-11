@@ -21,7 +21,7 @@ s3 = boto3.client(
 BUCKET_NAME = "the-tea"
 
 
-@app.route("/asw-url", methods=["POST"])
+@app.route("/aws-url", methods=["POST"])
 def get_upload_url():
     content_type = request.json.get("content_type")
     if not content_type:

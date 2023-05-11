@@ -57,11 +57,14 @@ class User(db.Model, SerializerMixin):
         )
 
     def active_recently(self):
-        diff =  self.last_request - datetime.now()
+        diff =  datetime.now() - self.last_request
 
-
+        print("diff")
         print(diff)
-        if diff < timedelta(minutes=30):
+        print("time delta")
+        print(timedelta(minutes=2))
+        if diff < timedelta(minutes=2):
+            print("Active recently")
             return True
         else:
             return False
