@@ -219,7 +219,43 @@ class Home_Results(Resource):
         return make_response(return_dict, 200)
 api.add_resource(Home_Results, '/home/<int:total>')
 
+class Home_ForYou(Resource):
+    def get(self, total):
+        posts_list = []
+        the_user = User.query.filter_by(id=session['user_id']).first()
+        the_user.update_activity()
 
+        
+
+        user_id = session['user_id']
+
+        posts = Post.query.join(Like, Like.post_id == Post.id).group_by(Post.id).order_by(db.func.count(Like.id).desc()).limit(100).all()
+
+        more_posts = total < len(posts)
+        print(more_posts)
+        if not more_posts:
+            total = len(posts) -1
+
+        posts = posts[0:total]
+
+        post_dicts = [post.to_dict(rules=('like_count', 'comment_count', )) for post in posts]
+
+        for post in post_dicts:
+            user = User.query.filter_by(id=post['user_id']).first()
+            user_dict = user.to_dict(only=('avatar_url', 'username'))
+            liked = Like.query.filter_by(post_id=post['id']).filter_by(user_id=session['user_id']).first()
+
+            like_dict = {
+                'liked': (not liked == None)
+            }
+            
+
+            temp = {**post, **user_dict, **like_dict}
+            posts_list.append(temp)
+
+        return_dict = {'posts':posts_list, 'more_posts': more_posts}    
+        return make_response(return_dict, 200)
+api.add_resource(Home_ForYou, '/homeforyou/<int:total>')
 
 class Posts(Resource):    
     def post(self):

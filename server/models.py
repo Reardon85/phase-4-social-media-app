@@ -107,7 +107,7 @@ class Post(db.Model, SerializerMixin):
     image = db.Column(db.String, nullable=False)
     content = db.Column(db.String, nullable=False)
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
- 
+
 
     # user_id foreign key
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
@@ -120,6 +120,9 @@ class Post(db.Model, SerializerMixin):
 
     def like_count(self):
         return len(self.likes)
+    
+    def comment_count(self):
+        return len(self.comments)
 
 
 
