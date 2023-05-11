@@ -10,39 +10,30 @@ from models import User, Post, Comment, Like, following
 from config import app, db, api
 
 
+@app.route('/upload_image', methods=['POST'])
+def upload_image():
+    file = request.files['image']
+    print(file)
+    s3 = boto3.resource('s3', aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
+                        aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'))
+    
+    print(s3)
+    bucket = s3.Bucket('the-tea')
+    print(bucket)
+    test = bucket.put_object(Key=file.filename, Body=file)
+  
 
-s3 = boto3.client(
-    "s3",
-    aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
-    aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"),
-)
+    file_url = f"https://{bucket.name}.s3.amazonaws.com/{file.filename}"
+    print(file_url)
+    the_user =User.query.filter_by(id=session['user_id']).first()
+    the_user.avatar_url = file_url
+    db.session.add(the_user)
+    db.session.commit()
+    return 'Image uploaded successfully!'
 
 
-BUCKET_NAME = "the-tea"
 
 
-@app.route("/aws-url", methods=["POST"])
-def get_upload_url():
-    content_type = request.json.get("content_type")
-    if not content_type:
-        return jsonify({"error": "No content type provided"}), 400
-
-    # Generate a random file name
-    file_name = f"{uuid4()}"
-
-    # Generate a pre-signed URL
-    url = s3.generate_presigned_url(
-        "put_object",
-        Params={"Bucket": BUCKET_NAME, "Key": file_name, "ContentType": content_type},
-        ExpiresIn=3600,  # URL expires in 1 hour
-    )
-
-    response = {
-        "message": "Pre-signed URL generated successfully",
-        "upload_url": url,
-        "file_url": f"https://{BUCKET_NAME}.s3.amazonaws.com/{file_name}",
-    }
-    return jsonify(response), 200
 
 
 
