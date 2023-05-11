@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { NavLink, useNavigate, useSearchParams } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import "./styles/SideBar.css"
 import Search from './Search';
@@ -27,9 +27,7 @@ function SideBar({ onLogout, user }) {
     }
 
 
-    const handleClick = (id) => {
-        navigate(`profile/${id}`)
-    }
+
 
 
 
@@ -63,7 +61,14 @@ function SideBar({ onLogout, user }) {
 
             </NavLink>
 
-            <Search handleClick={handleClick} />
+            <Search />
+
+
+            <NavLink to={`/create`} activeClassName="active">
+
+                <img src="/images/profile.png" alt="Home Icon" className='icons' /> Create
+
+            </NavLink>
 
 
 

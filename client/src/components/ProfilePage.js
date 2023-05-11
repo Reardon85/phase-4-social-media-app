@@ -15,6 +15,7 @@ function ProfilePage() {
     const [refreshState, setRefrehState] = useState(false)
 
 
+
     const navigate = useNavigate()
 
     console.log(useParams())
@@ -22,7 +23,6 @@ function ProfilePage() {
 
     useEffect(() => {
 
-        console.log("Hello?")
 
         fetch(`/users/${userId}`)
 
@@ -42,8 +42,6 @@ function ProfilePage() {
     }, [refreshState, userId])
 
     function handleFollow(following){
-        console.log("workings")
-        
         if (following){
             fetch(`/follow/${userId}`, {
                 method: 'DELETE',
@@ -65,10 +63,7 @@ function ProfilePage() {
                     setRefrehState((refreshState) => !refreshState)
                 }
             })
-
-
         }
-
     }
 
 

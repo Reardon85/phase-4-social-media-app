@@ -1,7 +1,7 @@
 import React from 'react'
 import "./styles/SearchResult.css"
 
-function SearchCard({ avatar_url, id, username, handleClick }) {
+function SearchCard({ avatar_url, id, username, handleClick, active }) {
 
 
     return (
@@ -9,7 +9,7 @@ function SearchCard({ avatar_url, id, username, handleClick }) {
             <div className="voice-chat-card-header">
                 <img className="avatar" alt="User avatar" src={avatar_url} />
                 <div className="username">{username}</div>
-                <div className="status"></div>
+                <div className={active ? "status" : "status-off"}></div>
             </div>
         </div>
     )

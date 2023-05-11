@@ -11,7 +11,7 @@ function ProfileCard({profileInfo, amFollowing, handleFollow, handleSettings}) {
 
     return (
         <main class="pf-container">
-            <div class="pf-card">
+            <div class={profileInfo.active ? "pf-card": "pf-card-offline"}>
                 <img src={profileInfo.avatar_url} alt="User image" class="card__image" />
                 <div class="card__text">
                     <h2>{profileInfo.username}</h2>

@@ -24,7 +24,7 @@ function Login({ onLogin }) {
 
     // const formSchema = yup.object()
     const formSchema = yup.object().shape({
-        username: yup.string().required("Must enter a name").max(15),
+        username: yup.string().required("Must enter a name"),
         password: yup.string().required("Must enter a name").max(15),
 
     });

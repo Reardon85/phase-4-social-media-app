@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react'
+import {useNavigate} from 'react-router-dom';
 import './styles/Search.css'
 import SearchResult from './SearchResult';
 
-function Search({ handleClick }) {
+function Search() {
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredUsers, setFilteredUsers] = useState([]);
     const [returnUser, setReturnUser] = useState([]);
+    const navigate = useNavigate()
 
     useEffect(() => {
         fetch("/users")
@@ -13,20 +15,24 @@ function Search({ handleClick }) {
             .then(data => setReturnUser(data))
     }, []);
 
-    console.log(returnUser)
+
     useEffect(() => {
         if (returnUser.users) {
 
             const results = returnUser.users.filter(user => user.username.includes(searchTerm))
+            console.log(results)
             if (results.length !== returnUser['total']) {
                 setFilteredUsers(results.slice(0, 5))
             } else {
                 setFilteredUsers([])
             }
         }
-    }, [searchTerm])
+    }, [searchTerm, returnUser])
 
-
+    const handleClick = (id) => {
+        navigate(`profile/${id}`)
+        setSearchTerm('')
+    }
 
     const handleInputChange = (event) => {
         setSearchTerm(event.target.value);

@@ -47,3 +47,12 @@
     background-color: green;
     margin-left: 10px;
 }
+
+
+.status-off {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: rgba(160, 161, 160, 0.192);
+    margin-left: 10px;
+}
