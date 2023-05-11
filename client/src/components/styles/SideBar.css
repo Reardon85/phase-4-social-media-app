@@ -8,7 +8,8 @@
     padding: 20px;
     background-color: #212121;
     animation: slide-in 0.8s forwards;
-    /* slide in animation */
+    overflow-y: auto
+        /* slide in animation */
 }
 
 /* define slide-in animation */

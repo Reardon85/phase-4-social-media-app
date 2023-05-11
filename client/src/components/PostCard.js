@@ -1,52 +1,8 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import "./styles/Post.css";
+import React from 'react'
+import "./styles/Post.css"
 
-function Post({ user_id, image, date_posted, like_count, id, content, avatar_url, username, liked }) {
 
-    const [likes, setlikes] = useState(like_count)
-    const [like, setlike] = useState(liked)
-
-    let semaphore = true
-
-    const handleLike = () => {
-
-        if (semaphore) {
-            semaphore = false
-            if (like) {
-                fetch(`/likes/${id}`, {
-                    method: "DELETE",
-                }
-                ).then((r) => {
-                    if (r.ok) {
-                        console.log("deleting")
-                        setlikes((likes) => likes - 1)
-                        setlike((like) => !like)
-
-                    }
-                })
-            }
-            else {
-                fetch(`/likes/${id}`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: {}
-                }
-                ).then((r) => {
-                    if (r.ok) {
-                        console.log("deleting")
-                        setlike((like) => !like)
-                        setlikes((likes) => likes + 1)
-
-                    }
-                })
-            }
-            semaphore = true
-        }
-    }
-
+function PostCard() {
     return (
         <div className="post-card">
             <div className="post-header">
@@ -78,7 +34,7 @@ function Post({ user_id, image, date_posted, like_count, id, content, avatar_url
                 </div>
             </div>
         </div>
-    );
+    )
 }
 
-export default Post;
+export default PostCard

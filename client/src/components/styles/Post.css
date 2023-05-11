@@ -106,7 +106,7 @@
 }
 
 .icon path {
-    fill: rgba(139, 93, 93, 0.687);
+    fill: rgba(49, 49, 49, 0.687);
     transition: .2s linear;
 }
 
@@ -121,7 +121,7 @@
 .like-btn>.iconn path {
     fill: rgb(235, 107, 129);
     top: 105%;
-    
+
 }
 
 
