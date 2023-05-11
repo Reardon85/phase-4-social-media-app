@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from "react"
 import "./styles/Home.css"
 import Post from "./Post"
+
+
+
 function Home({ setRefreshState, refreshState }) {
 
   const [posts, setPosts] = useState([])
   const [total, setTotal] = useState(5)
   const [morePosts, setMorePosts] = useState(true)
+
 
   useEffect(() => {
 

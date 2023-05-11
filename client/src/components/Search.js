@@ -19,7 +19,10 @@ function Search() {
     useEffect(() => {
         if (returnUser.users) {
 
-            const results = returnUser.users.filter(user => user.username.includes(searchTerm))
+            const results = returnUser.users.filter(user =>
+                user.username.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+
             console.log(results)
             if (results.length !== returnUser['total']) {
                 setFilteredUsers(results.slice(0, 5))

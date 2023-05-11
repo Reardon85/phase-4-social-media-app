@@ -7,6 +7,7 @@ function Post({ user_id, image, date_posted, like_count, id, content, avatar_url
     const [likes, setlikes] = useState(like_count)
     const [like, setlike] = useState(liked)
 
+
     let semaphore = true
 
     const handleLike = () => {
