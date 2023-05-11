@@ -1,14 +1,16 @@
 import React from 'react';
+import {Link} from 'react-router-dom';
 import "./styles/Post.css";
 
 function Post({ user_id, image, date_posted, like_count, id, content, avatar_url, username }) {
+ 
     return (
         <div className="post-card">
             <div className="post-header">
-                <img src={avatar_url} alt="User Profile Photo" className="user-profile-photo" />
-                <h2 className="user-name">{username}</h2>
+                <Link to={`/profile/${user_id}`} ><img src={avatar_url} alt="User Profile" className="user-profile-photo" /></Link>
+                <Link to={`/profile/${user_id}`}  style={{ textDecoration: 'none', color: 'inherit' }}><h2  className="user-name">{username}</h2></Link>
             </div>
-            <img src={image} alt="Post Image" className="post-image" />
+            <img  src={image} alt="Post" className="post-image" />
             <div className="post-footer">
                 <h3 className='date-title'>{date_posted.slice(0, -3)}</h3>
                 <h2 className='likes-title'>Likes: {like_count}</h2>
