@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useFormik } from "formik";
 
 import { Button, Form, Grid, Header, Message, Segment } from 'semantic-ui-react'
@@ -13,7 +13,7 @@ function Login({ onLogin }) {
     const [refreshPage, setRefreshPage] = useState(false)
     const [errors, setErrors] = useState([])
     const [register, setRegister] = useState(false)
-    const navigate = useNavigate()
+
 
     useEffect(() => {
 

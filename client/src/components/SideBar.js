@@ -51,15 +51,15 @@ function SideBar({ onLogout, user }) {
             </Link>
 
             <NavLink exact to="/" activeClassName="active">
-                <img src="./images/home.png" alt="Home Icon" className='icons' /> Home
+                <img src="/images/home.png" alt="Home Icon" className='icons' /> Home
             </NavLink>
             <NavLink to="/foryou" activeClassName="active">
-                <img src="./images/foryou.png" alt="Home Icon" className='icons' /> For You
+                <img src="/images/foryou.png" alt="Home Icon" className='icons' /> For You
             </NavLink>
 
             <NavLink to={`/profile/${user.id}`} activeClassName="active">
 
-                <img src="./images/profile.png" alt="Home Icon" className='icons' /> Profile
+                <img src="/images/profile.png" alt="Home Icon" className='icons' /> Profile
 
             </NavLink>
 
