@@ -47,7 +47,7 @@ function Search() {
         <div div className="s-cont" >
             <div class="sinput-container">
                 <input
-                    placeholder="Search something..."
+                    placeholder="Search..."
                     class="sinput"
                     name="text"
                     type="text"

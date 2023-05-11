@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import "./styles/ProfileCard.css"
 
 
-function ProfileCard({profileInfo, amFollowing, handleFollow, handleSettings}) {
+function ProfileCard({ profileInfo, amFollowing, handleFollow, handleSettings }) {
 
     // useEffect()
 
@@ -34,14 +34,14 @@ function ProfileCard({profileInfo, amFollowing, handleFollow, handleSettings}) {
                 <div class="card__action">
                     {/* <button class="card__action__button card__action--follow">follow</button> */}
                     {amFollowing[0]
-                    ? 
-                    <button onClick={handleSettings} class="card__action__button card__action--message">Settings</button>
-                    :
-                    amFollowing[1]
                         ?
-                        <button onClick={() => {handleFollow(true)}} class="card__action__button card__action--message">Following</button>
+                        <button onClick={handleSettings} class="card__action__button card__action--message">Settings</button>
                         :
-                        <button onClick={() => {handleFollow(false)}} class="card__action__button card__action--message">Follow</button>
+                        amFollowing[1]
+                            ?
+                            <button onClick={() => { handleFollow(true) }} class="card__action__button card__action--message">Unfollow</button>
+                            :
+                            <button onClick={() => { handleFollow(false) }} class="card__action__button card__action--message">Follow</button>
                     }
                 </div>
             </div>
