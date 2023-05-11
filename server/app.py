@@ -19,11 +19,7 @@ def index(id=0):
 
 
 class Signup(Resource):
-
     def post(self):
-
-
-
         try:
             data = request.get_json()
             new_user = User(username=data.get('username'), email=data.get('email'))
@@ -36,17 +32,18 @@ class Signup(Resource):
             return make_response(new_user.to_dict(), 201)
         except IntegrityError:
             return make_response({'error': '422 Unprocessable Entity'}, 422)
-
 api.add_resource(Signup, '/signup')
 
 class CheckSession(Resource):
-
     def get(self):
 
         if not session['user_id']:
             return make_response({'error': ' test 401 Unauthorized'}, 401)
+        
+
 
         the_user = User.query.filter_by(id=session['user_id']).first()
+        the_user.update_activity()
         print("following:")
         print(the_user.following)
         print("Followed by")
@@ -54,7 +51,6 @@ class CheckSession(Resource):
         print(the_user.avatar_url)
         print(the_user.bio)
         return make_response(the_user.to_dict(), 200)
-    
 api.add_resource(CheckSession, '/check_session')
     
 class Login(Resource):
@@ -70,81 +66,52 @@ class Login(Resource):
         if not the_user.authenticate(data.get('password')):
             return make_response({'error:': 'Invalid Password'}, 400)
         
+        the_user.update_activity()
         session['user_id'] = the_user.id
-        return make_response(the_user.to_dict(), 200)
-    
+        return make_response(the_user.to_dict(), 200) 
 api.add_resource(Login, '/login')
 
 class Logout(Resource):
     def delete(self):
         if session.get('user_id'):
+            the_user = User.query.filter_by(id=session['user_id']).first()
+            the_user.logged_off()
             session['user_id'] = None
             return make_response({'message': 'Successfully Logged Out'}, 204)
 
         return make_response({'error':"401 Unauthorized"}, 401)    
-
-
 api.add_resource(Logout, '/logout')
 
+
 class Users(Resource):
-#I think the only time we'd use this is if we're implimenting a search feature for a specific user. Where we are letting the front end do the filtering.
-# But if we do then we're only going to want to return a list of usernames. It would be bad practice to let anyone do a get request 
-# that returns all our users passwords(even if they are hashed) and e-mails. will have to consider if want to do a search by username on frontend or backend.
-#  backend faster but frontend will let us do am onchange filter.  
-
-
-
     def get(self):
-        users = [user.to_dict(only=("id", "avatar_url", "username")) for user in User.query.all()]
+
+        the_user = User.query.filter_by(id=session['user_id']).first()
+        the_user.update_activity()
+        users = [{**user.to_dict(only=("id", "avatar_url", "username")), **{'active':user.active_recently()}} for user in User.query.all()]
         total = len(users)
         total_dict = {"total": total, "users": users}
         return make_response(total_dict, 200)
-    
-    
-    def post(self):
-        data = request.get_json()
-        new_u = Post(name = data['name'],
-                    email = data['email'],
-                    password = data['password'])
-        try:
-            db.session.add(new_u)
-            db.session.commit()
-            return make_response(new_u, 201)
-        except Exception as ex:
-            return make_response({'error': [ex.__str__()]}, 422)
-    
 api.add_resource(Users, '/users')
 
 class Users_By_Id(Resource):
     def get(self, id):
-        
-        
-        print("id")
-        print(id)
-
+        the_user = User.query.filter_by(id=session['user_id']).first()
+        the_user.update_activity()
         am_following = [False, False]
         profile_user = User.query.filter_by(id = id).first()
-        print('return profile_user:')
-        print(profile_user)
-
         if profile_user == None:
             return make_response({"error": "User not found"}, 404)
         
-
-
         if profile_user.id == session['user_id']:
             am_following = [True, True]
         else:
             am_following[0] = False
-            the_user = User.query.filter_by(id=session['user_id']).first()
             following = [follow.id for follow in the_user.following]
 
             if id in following:
                 am_following[1] = True
 
-            
-            
-        
         profile_dict = {
             'profile_info': {
                 'username': profile_user.username,
@@ -152,14 +119,14 @@ class Users_By_Id(Resource):
                 'bio': profile_user.bio,
                 'posts':len(profile_user.to_dict(only=("posts",))['posts']),
                 'following':len(profile_user.to_dict(only=("following",))['following']),
-                'followers':len(profile_user.to_dict(only=("followed_by",))['followed_by'])
+                'followers':len(profile_user.to_dict(only=("followed_by",))['followed_by']),
+                'active':profile_user.active_recently()
             },
             'posts': profile_user.to_dict(only=("posts",))['posts'],
             'am_following': am_following
-
         }   
-        
         return make_response(profile_dict, 200)
+    
     def delete(self, id):
         user = User.query.filter_by(id = id).first()
         if user == None:
@@ -169,6 +136,8 @@ class Users_By_Id(Resource):
         return make_response('Account deleted successfully', 200)
     
     def patch(self, id):
+        the_user = User.query.filter_by(id=session['user_id']).first()
+        the_user.update_activity()
         user_instance = User.query.filter_by(id = id).first()
         if user_instance == None:
             return make_response({"errors": ["validation errors"]}, 404)
@@ -178,49 +147,40 @@ class Users_By_Id(Resource):
         db.session.add(user_instance)
         db.session.commit()
         return make_response(user_instance.to_dict(), 202)
-
 api.add_resource(Users_By_Id, '/users/<int:id>')
 
 class Posts(Resource):
-#Shouldn't be an issue for our site. But for an actual social media site with millions of posts. You'd never be in a situation where you'd 
-# send a browser request a list with millions of posts. Maybe when we get the "following" table working we alter this so it only returns first 100 posts
-#from the people the user is following. Flask "session" will be storing the "user_id" so we don't need to pass it as parameter in the url. 
     def get(self):
         posts_list = []
+        the_user = User.query.filter_by(id=session['user_id']).first()
+        the_user.update_activity()
 
         user_id = session['user_id']
 
         posts = Post.query.join(following, (following.c.follower_id == Post.user_id)).outerjoin(Like, Like.post_id == Post.id) \
         .filter(following.c.followed_id == user_id).group_by(Post.id).order_by(db.func.count(Like.id).desc()).all()
 
-        print(len(posts))
-
         post_dicts = [post.to_dict(rules=('like_count',)) for post in posts]
 
         for post in post_dicts:
             user = User.query.filter_by(id=post['user_id']).first()
             user_dict = user.to_dict(only=('avatar_url', 'username'))
-            temp = {**post, **user_dict}
+            liked = Like.query.filter_by(post_id=post['id']).filter_by(user_id=session['user_id']).first()
+
+            like_dict = {
+                'liked': (not liked == None)
+            }
+            print(like_dict['liked'])
+
+            temp = {**post, **user_dict, **like_dict}
             posts_list.append(temp)
-
-  
-
-        # following_users = User.query.filter_by(id=session['user_id']).first().following
-        # [posts_list.extend(follow.to_dict(only=('posts',))['posts']) for follow in following_users]
-        # print(posts_list)
         return make_response(posts_list, 200)
     
-        # for p in Post.query.all():
-        #     posts_dict = {
-        #         'id': p.id,
-        #         'image': p.image,
-        #         'content': p.content,
-        #         'date_posted': p.date_posted
-        #     }
-        #     posts_list.append(posts_dict)
-        # return make_response(posts_list, 200)
-    
     def post(self):
+
+        the_user = User.query.filter_by(id=session['user_id']).first()
+        the_user.update_activity()
+
         data = request.get_json()
         post = Post(image = data['image'],
                     content = data['content'],
@@ -231,7 +191,6 @@ class Posts(Resource):
             return make_response(post.to_dict(), 201)
         except Exception as ex:
             return make_response({'error': [ex.__str__()]}, 422)
-    
 api.add_resource(Posts, '/posts')
 
 
@@ -256,9 +215,6 @@ class PostsById(Resource):
 api.add_resource(PostsById, '/posts/<int:id>')
 
 class Comments(Resource):
-#It's unlikely that we will run into a situation where we will need to return a list containing every comment from every post ever made.
-#Comments will likely be pulled in similar way to how planets were were appended to scientist in  Scientist_by_ID get function in cosmic fun CC
-# Since a commenet will only ever be displayed in connection to the post it lists as it's foreign key. 
     def get(self):
         comments_list = []
         for c in Comment.query.all():
@@ -271,6 +227,9 @@ class Comments(Resource):
         return make_response(comments_list, 200)
     
     def post(self):
+        the_user = User.query.filter_by(id=session['user_id']).first()
+        the_user.update_activity()
+
         data = request.get_json()
         comment = Comment(content = data['content'])
         try:
@@ -279,7 +238,6 @@ class Comments(Resource):
             return make_response(comment.to_dict(), 201)
         except Exception as ex:
             return make_response({'error': [ex.__str__()]}, 422)
-    
 api.add_resource(Comments, '/comments')
 
 class CommentsById(Resource):
@@ -289,12 +247,8 @@ class CommentsById(Resource):
             return make_response({"error": "Comment not found"}, 404)
         db.session.delete(comment)
         db.session.commit()
-        return make_response('Comment deleted successfully', 200)
-    
+        return make_response('Comment deleted successfully', 200)    
 api.add_resource(CommentsById, '/comments/<int:id>')
-
-
-
 
 
 class Follows(Resource):
@@ -302,29 +256,54 @@ class Follows(Resource):
         follow_id = request.get_json()['userId']
 
         the_user = User.query.filter_by(id=session['user_id']).first()
+        the_user.update_activity()
         follow_user = User.query.filter_by(id=follow_id).first()
 
         the_user.following.append(follow_user)
 
         db.session.commit()
         return make_response(follow_user.to_dict(only=('username', 'id')), 201)
-
 api.add_resource(Follows, '/follow')
 
 
 
 class Follow_By_Id(Resource):
     def delete(self, id):
-        the_User = User.query.filter_by(id=session['user_id']).first()
+        the_user = User.query.filter_by(id=session['user_id']).first()
+        the_user.update_activity()
         follow_user = User.query.filter_by(id=id).first()
 
+        the_user.following.remove(follow_user)
+        db.session.commit()
+api.add_resource(Follow_By_Id, '/follow/<int:id>')
 
-        the_User.following.remove(follow_user)
+
+class Likes_By_Id(Resource):
+    def post(self, id):
+        the_user = User.query.filter_by(id=session['user_id']).first()
+        the_user.update_activity()
+
+        like_obj = Like(user_id = session['user_id'], post_id = id)
+        db.session.add(like_obj)
         db.session.commit()
 
+        return make_response(like_obj.to_dict(), 201)
+
+    def delete(self, id):
+        the_user = User.query.filter_by(id=session['user_id']).first()
+        the_user.update_activity()
+
+        like_obj = Like.query.filter_by(post_id=id).filter_by(user_id=session['user_id']).first()
+
+        if not like_obj:
+            return make_response({"error":"Like obj doesn't exist"}, 404)
+        db.session.delete(like_obj)
+        db.session.commit()
+
+        return make_response({"message":"Like Successfully Deleted"}, 204)
+api.add_resource(Likes_By_Id, '/likes/<int:id>')
 
 
-api.add_resource(Follow_By_Id, '/follow/<int:id>')
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)

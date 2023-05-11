@@ -89,12 +89,6 @@ content_list= [
 ]
 
 post_pic = [
-'https://the-tea.s3.us-east-2.amazonaws.com/emb1.jpg',
-'https://the-tea.s3.us-east-2.amazonaws.com/emb2.jpg',
-'https://the-tea.s3.us-east-2.amazonaws.com/emb3.jpg',
-'https://the-tea.s3.us-east-2.amazonaws.com/emb4.jpg',
-'https://the-tea.s3.us-east-2.amazonaws.com/emb5.webp',
-'https://the-tea.s3.us-east-2.amazonaws.com/emb6.png',
 'https://the-tea.s3.us-east-2.amazonaws.com/image1.jpg',
 'https://the-tea.s3.us-east-2.amazonaws.com/image1.jpg',
 'https://the-tea.s3.us-east-2.amazonaws.com/image11.jpg',
@@ -188,38 +182,47 @@ post_pic = [
 'https://the-tea.s3.us-east-2.amazonaws.com/img92.jpg',
 'https://the-tea.s3.us-east-2.amazonaws.com/img93.jpg',
 'https://the-tea.s3.us-east-2.amazonaws.com/img94.jpg',
-'https://the-tea.s3.us-east-2.amazonaws.com/drunk1.jpg',
-'https://the-tea.s3.us-east-2.amazonaws.com/drunk10.jpg',
-'https://the-tea.s3.us-east-2.amazonaws.com/drunk11.webp',
-'https://the-tea.s3.us-east-2.amazonaws.com/drunk12.webp',
-'https://the-tea.s3.us-east-2.amazonaws.com/drunk13.jpg',
-'https://the-tea.s3.us-east-2.amazonaws.com/drunk14.jpg',
-'https://the-tea.s3.us-east-2.amazonaws.com/drunk15.jpg',
-'https://the-tea.s3.us-east-2.amazonaws.com/drunk16.jpg',
-'https://the-tea.s3.us-east-2.amazonaws.com/drunk17.jpg',
-'https://the-tea.s3.us-east-2.amazonaws.com/drunk19.jpg',
-'https://the-tea.s3.us-east-2.amazonaws.com/drunk2.jpg',
-'https://the-tea.s3.us-east-2.amazonaws.com/drunk21.webp',
-'https://the-tea.s3.us-east-2.amazonaws.com/drunk22.webp',
-'https://the-tea.s3.us-east-2.amazonaws.com/drunk23.jpg',
-'https://the-tea.s3.us-east-2.amazonaws.com/drunk24.jpg',
-'https://the-tea.s3.us-east-2.amazonaws.com/drunk25.jpg',
-'https://the-tea.s3.us-east-2.amazonaws.com/drunk26.jpg',
-'https://the-tea.s3.us-east-2.amazonaws.com/drunk27.webp',
-'https://the-tea.s3.us-east-2.amazonaws.com/drunk28.webp',
-'https://the-tea.s3.us-east-2.amazonaws.com/drunk29.jpg',
-'https://the-tea.s3.us-east-2.amazonaws.com/drunk3.jpg',
-'https://the-tea.s3.us-east-2.amazonaws.com/drunk30.jpg',
-'https://the-tea.s3.us-east-2.amazonaws.com/drunk31.jpg',
-'https://the-tea.s3.us-east-2.amazonaws.com/drunk32.webp'
-'https://the-tea.s3.us-east-2.amazonaws.com/drunk33.jpg',
-'https://the-tea.s3.us-east-2.amazonaws.com/drunk4.jpg',
-'https://the-tea.s3.us-east-2.amazonaws.com/drunk5.jpeg',
-'https://the-tea.s3.us-east-2.amazonaws.com/drunk6.jpeg',
-'https://the-tea.s3.us-east-2.amazonaws.com/drunk7.webp',
-'https://the-tea.s3.us-east-2.amazonaws.com/drunk8.webp',
-'https://the-tea.s3.us-east-2.amazonaws.com/drunk9.jpg'
 ]
+
+
+# 'https://the-tea.s3.us-east-2.amazonaws.com/emb1.jpg',
+# 'https://the-tea.s3.us-east-2.amazonaws.com/emb2.jpg',
+# 'https://the-tea.s3.us-east-2.amazonaws.com/emb3.jpg',
+# 'https://the-tea.s3.us-east-2.amazonaws.com/emb4.jpg',
+# 'https://the-tea.s3.us-east-2.amazonaws.com/emb5.webp',
+# 'https://the-tea.s3.us-east-2.amazonaws.com/emb6.png',
+# 'https://the-tea.s3.us-east-2.amazonaws.com/drunk1.jpg',
+# 'https://the-tea.s3.us-east-2.amazonaws.com/drunk10.jpg',
+# 'https://the-tea.s3.us-east-2.amazonaws.com/drunk11.webp',
+# 'https://the-tea.s3.us-east-2.amazonaws.com/drunk12.webp',
+# 'https://the-tea.s3.us-east-2.amazonaws.com/drunk13.jpg',
+# 'https://the-tea.s3.us-east-2.amazonaws.com/drunk14.jpg',
+# 'https://the-tea.s3.us-east-2.amazonaws.com/drunk15.jpg',
+# 'https://the-tea.s3.us-east-2.amazonaws.com/drunk16.jpg',
+# 'https://the-tea.s3.us-east-2.amazonaws.com/drunk17.jpg',
+# 'https://the-tea.s3.us-east-2.amazonaws.com/drunk19.jpg',
+# 'https://the-tea.s3.us-east-2.amazonaws.com/drunk2.jpg',
+# 'https://the-tea.s3.us-east-2.amazonaws.com/drunk21.webp',
+# 'https://the-tea.s3.us-east-2.amazonaws.com/drunk22.webp',
+# 'https://the-tea.s3.us-east-2.amazonaws.com/drunk23.jpg',
+# 'https://the-tea.s3.us-east-2.amazonaws.com/drunk24.jpg',
+# 'https://the-tea.s3.us-east-2.amazonaws.com/drunk25.jpg',
+# 'https://the-tea.s3.us-east-2.amazonaws.com/drunk26.jpg',
+# 'https://the-tea.s3.us-east-2.amazonaws.com/drunk27.webp',
+# 'https://the-tea.s3.us-east-2.amazonaws.com/drunk28.webp',
+# 'https://the-tea.s3.us-east-2.amazonaws.com/drunk29.jpg',
+# 'https://the-tea.s3.us-east-2.amazonaws.com/drunk3.jpg',
+# 'https://the-tea.s3.us-east-2.amazonaws.com/drunk30.jpg',
+# 'https://the-tea.s3.us-east-2.amazonaws.com/drunk31.jpg',
+# 'https://the-tea.s3.us-east-2.amazonaws.com/drunk32.webp'
+# 'https://the-tea.s3.us-east-2.amazonaws.com/drunk33.jpg',
+# 'https://the-tea.s3.us-east-2.amazonaws.com/drunk4.jpg',
+# 'https://the-tea.s3.us-east-2.amazonaws.com/drunk5.jpeg',
+# 'https://the-tea.s3.us-east-2.amazonaws.com/drunk6.jpeg',
+# 'https://the-tea.s3.us-east-2.amazonaws.com/drunk7.webp',
+# 'https://the-tea.s3.us-east-2.amazonaws.com/drunk8.webp',
+# 'https://the-tea.s3.us-east-2.amazonaws.com/drunk9.jpg'
+
 
 nice_comments = [
 'So beautiful! 😍',
@@ -280,6 +283,7 @@ with app.app_context():
     Like.query.delete()
     Post.query.delete()
     User.query.delete()
+    db.session.commit()
 
 
     print('Creating User objects...')
@@ -328,18 +332,82 @@ with app.app_context():
     print('Complete.')
 
     print("Creating 5,000 randomly assigned Likes")
+    # likes = []
+
+    # super_users = User.query.limit(60).all()
+    # super_posts = Post.query.limit(15).all()
+
+    for i in range(10):
+
+        post = posts.pop(1)
+        index = randint(50, 99)
+        for i in range(index):
+            like = Like(user_id=users[i].id, post_id=post.id)
+            db.session.add(like)
+
+
+    # print(len(likes))
+    # db.session.add_all(likes)
+    # print('Committing transaction...') 
+    # db.session.commit() 
+    # print('Complete.')
+
     likes = []
 
-    for i in range(5000):
+    users_list = list(users)
 
-        like = Like(
-            user_id= rc(users).id,
-            post_id= rc(posts).id
-        )
-        likes.append(like)
+
+    for user in users_list:
+        posts_list = list(posts)
+        print("Entering loop")
+
+        for i in range(randint(1, 100)):
+            print(i)
+            random_index = randint(0, len(posts_list) - 1)
+            post = posts_list.pop(random_index)
+            like = Like(user_id=user.id, post_id=post.id)
+            likes.append(like)
+            db.session.add(like)
+
+    # for user in users:
+
+    #     if user.id == None:
+    #         print('none')
+
+    # for post in posts:
+
+    #     if post.id == None:
+    #         print('none')
+
+    # for post in posts:
+    #     print(post.id)
+
+
+
+
+
+    # for i in range(5000):
+
+    #     post_id = rc(posts).id
+    #     user_id = rc(users).id
+        
+    #     like = Like.query.filter_by(post_id=post_id, user_id=user_id).first()
+    #     if not like:
+    #         new_like = Like(user_id=user_id, post_id=post_id)
+    #         # likes.append(new_like)
+    #         db.session.add(like)
+    #         db.session.commit()
+
+
+        # like = Like(
+        #     user_id= rc(users).id,
+        #     post_id= rc(posts).id
+        # )
+
 
     print('Adding Like objects to transaction...')
-    db.session.add_all(likes)
+    print(len(likes))
+    # db.session.add_all(likes)
     print('Committing transaction...') 
     db.session.commit() 
     print('Complete.')
