@@ -99,6 +99,12 @@
     transition: .2s linear;
 }
 
+.iconn {
+    width: 30px;
+    height: 30px;
+    transition: .2s linear;
+}
+
 .icon path {
     fill: rgba(139, 93, 93, 0.687);
     transition: .2s linear;
@@ -111,6 +117,13 @@
 .like-btn:hover>.icon path {
     fill: rgb(235, 107, 129);
 }
+
+.like-btn>.iconn path {
+    fill: rgb(235, 107, 129);
+    top: 105%;
+    
+}
+
 
 .like-btn:hover::after {
     visibility: visible;

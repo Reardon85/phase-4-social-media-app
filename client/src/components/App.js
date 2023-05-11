@@ -6,6 +6,7 @@ import ForYou from './ForYou';
 import Search from './Search';
 
 import ProfilePage from './ProfilePage';
+import Create from './Create';
 
 import Login from './Login';
 import "./styles/SideBar.css"
@@ -18,6 +19,7 @@ import "./styles/SideBar.css"
 function App() {
 
   const [user, setUser] = useState(null)
+  const [refreshState, setRefrehState] = useState(false)
 
   useEffect(() => {
     //auto-login
@@ -32,6 +34,7 @@ function App() {
   }, [])
 
 
+
   if (user === "none") {
     return <Login onLogin={setUser} user={user} />
   } else if (user) {
@@ -39,9 +42,10 @@ function App() {
       <div className="App">
         <SideBar onLogout={setUser} user={user} />
         <Routes>
-          <Route path='/' element={<Home />} />
+          <Route path='/' element={<Home setRefreshStage={setRefrehState} refreshState={refreshState} />} />
           <Route path='/foryou' element={<ForYou />} />
-          <Route path="/profile/:userId" element={<ProfilePage />} />
+          <Route path="/profile/:userId" element={<ProfilePage setRefreshStage={setRefrehState} refreshState={refreshState}  />} />
+          <Route path='/create' element={<Create />} />
           <Route path='/search' element={<Search />} />
 
         </Routes>

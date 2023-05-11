@@ -1,4 +1,6 @@
 import os
+from uuid import uuid4
+import boto3
 from dotenv import load_dotenv
 load_dotenv()
 from flask import request, make_response, abort, jsonify, render_template, session
@@ -6,6 +8,42 @@ from flask_restful import  Resource
 from sqlalchemy.exc import IntegrityError
 from models import User, Post, Comment, Like, following
 from config import app, db, api
+
+
+
+s3 = boto3.client(
+    "s3",
+    aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
+    aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"),
+)
+
+
+BUCKET_NAME = "the-tea"
+
+
+@app.route("/asw-url", methods=["POST"])
+def get_upload_url():
+    content_type = request.json.get("content_type")
+    if not content_type:
+        return jsonify({"error": "No content type provided"}), 400
+
+    # Generate a random file name
+    file_name = f"{uuid4()}"
+
+    # Generate a pre-signed URL
+    url = s3.generate_presigned_url(
+        "put_object",
+        Params={"Bucket": BUCKET_NAME, "Key": file_name, "ContentType": content_type},
+        ExpiresIn=3600,  # URL expires in 1 hour
+    )
+
+    response = {
+        "message": "Pre-signed URL generated successfully",
+        "upload_url": url,
+        "file_url": f"https://{BUCKET_NAME}.s3.amazonaws.com/{file_name}",
+    }
+    return jsonify(response), 200
+
 
 
 
@@ -149,16 +187,27 @@ class Users_By_Id(Resource):
         return make_response(user_instance.to_dict(), 202)
 api.add_resource(Users_By_Id, '/users/<int:id>')
 
-class Posts(Resource):
-    def get(self):
+
+
+class Home_Results(Resource):
+    def get(self, total):
         posts_list = []
         the_user = User.query.filter_by(id=session['user_id']).first()
         the_user.update_activity()
+
+        
 
         user_id = session['user_id']
 
         posts = Post.query.join(following, (following.c.follower_id == Post.user_id)).outerjoin(Like, Like.post_id == Post.id) \
         .filter(following.c.followed_id == user_id).group_by(Post.id).order_by(db.func.count(Like.id).desc()).all()
+
+        more_posts = total < len(posts)
+        print(more_posts)
+        if not more_posts:
+            total = len(posts) -1
+
+        posts = posts[0:total]
 
         post_dicts = [post.to_dict(rules=('like_count',)) for post in posts]
 
@@ -170,12 +219,18 @@ class Posts(Resource):
             like_dict = {
                 'liked': (not liked == None)
             }
-            print(like_dict['liked'])
+            
 
             temp = {**post, **user_dict, **like_dict}
             posts_list.append(temp)
-        return make_response(posts_list, 200)
-    
+
+        return_dict = {'posts':posts_list, 'more_posts': more_posts}    
+        return make_response(return_dict, 200)
+api.add_resource(Home_Results, '/home/<int:total>')
+
+
+
+class Posts(Resource):    
     def post(self):
 
         the_user = User.query.filter_by(id=session['user_id']).first()
