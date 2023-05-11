@@ -119,21 +119,45 @@ api.add_resource(Users, '/users')
 
 class Users_By_Id(Resource):
     def get(self, id):
-        the_user = User.query.filter_by(id = id).first()
-        if the_user == None:
+        
+        
+        print("id")
+        print(id)
+
+        am_following = [False, False]
+        profile_user = User.query.filter_by(id = id).first()
+        print('return profile_user:')
+        print(profile_user)
+
+        if profile_user == None:
             return make_response({"error": "User not found"}, 404)
+        
+
+
+        if profile_user.id == session['user_id']:
+            am_following = [True, True]
+        else:
+            am_following[0] = False
+            the_user = User.query.filter_by(id=session['user_id']).first()
+            following = [follow.id for follow in the_user.following]
+
+            if id in following:
+                am_following[1] = True
+
+            
+            
         
         profile_dict = {
             'profile_info': {
-                'username': the_user.username,
-                'avatar_url': the_user.avatar_url,
-                'bio': the_user.bio,
-                'posts':len(the_user.to_dict(only=("posts",))['posts']),
-                'following':len(the_user.to_dict(only=("following",))['following']),
-                'followers':len(the_user.to_dict(only=("followed_by",))['followed_by'])
+                'username': profile_user.username,
+                'avatar_url': profile_user.avatar_url,
+                'bio': profile_user.bio,
+                'posts':len(profile_user.to_dict(only=("posts",))['posts']),
+                'following':len(profile_user.to_dict(only=("following",))['following']),
+                'followers':len(profile_user.to_dict(only=("followed_by",))['followed_by'])
             },
-            'posts': the_user.to_dict(only=("posts",))['posts'],
-            'my_profile': the_user.id == session['user_id']
+            'posts': profile_user.to_dict(only=("posts",))['posts'],
+            'am_following': am_following
 
         }   
         
@@ -271,6 +295,37 @@ api.add_resource(CommentsById, '/comments/<int:id>')
 
 
 
+
+
+class Follows(Resource):
+    def post(self):
+        follow_id = request.get_json()['userId']
+
+        the_user = User.query.filter_by(id=session['user_id']).first()
+        follow_user = User.query.filter_by(id=follow_id).first()
+
+        the_user.following.append(follow_user)
+
+        db.session.commit()
+        return make_response(follow_user.to_dict(only=('username', 'id')), 201)
+
+api.add_resource(Follows, '/follow')
+
+
+
+class Follow_By_Id(Resource):
+    def delete(self, id):
+        the_User = User.query.filter_by(id=session['user_id']).first()
+        follow_user = User.query.filter_by(id=id).first()
+
+
+        the_User.following.remove(follow_user)
+        db.session.commit()
+
+        # follow_obj = db.session.query(following).filter_by(follower_id=session['user_id']).filter_by(followed_id=id)
+        # print(follow_obj)
+
+api.add_resource(Follow_By_Id, '/follow/<int:id>')
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)

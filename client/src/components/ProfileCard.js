@@ -1,8 +1,14 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import "./styles/ProfileCard.css"
 
 
-function ProfileCard({profileInfo}) {
+function ProfileCard({profileInfo, amFollowing, handleFollow, handleSettings}) {
+
+    // useEffect()
+
+
+
+
     return (
         <main class="pf-container">
             <div class="pf-card">
@@ -27,7 +33,16 @@ function ProfileCard({profileInfo}) {
                 </ul>
                 <div class="card__action">
                     {/* <button class="card__action__button card__action--follow">follow</button> */}
-                    <button class="card__action__button card__action--message">Settings</button>
+                    {amFollowing[0]
+                    ? 
+                    <button onClick={handleSettings} class="card__action__button card__action--message">Settings</button>
+                    :
+                    amFollowing[1]
+                        ?
+                        <button onClick={() => {handleFollow(true)}} class="card__action__button card__action--message">Following</button>
+                        :
+                        <button onClick={() => {handleFollow(false)}} class="card__action__button card__action--message">Follow</button>
+                    }
                 </div>
             </div>
         </main>
