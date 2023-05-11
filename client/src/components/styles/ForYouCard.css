@@ -1,19 +1,22 @@
 .image-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-
-    display: flex;
+    grid-gap: 20px;
+    max-width: 800px;
+    margin-left: 28%;
+    margin-top: 70px;
 }
 
 .image-container {
     position: relative;
-    max-width: 200px;
+    width: 250px;
+    height: 250px;
 }
 
 .image-container img {
     display: block;
     width: 100%;
-    height: auto;
+    height: 250px;
 }
 
 .image-overlay {
@@ -47,13 +50,4 @@
     font-size: 16px;
     font-weight: normal;
     margin-top: 10px;
-}
-
-.image-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-gap: 20px;
-    max-width: 800px;
-    margin-left: 38%;
-    margin-top: 70px;
 }
