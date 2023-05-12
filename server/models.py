@@ -21,7 +21,7 @@ following = db.Table('following',
 class User(db.Model, SerializerMixin):
     __tablename__= 'users'
 
-    serialize_rules= ('-_password_hash', '-following', '-followed_by', '-posts')
+    serialize_rules= ('-_password_hash', '-following', '-followed_by', '-posts', '-comments')
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, nullable=False)
@@ -31,6 +31,8 @@ class User(db.Model, SerializerMixin):
     bio = db.Column(db.String)
     last_request = db.Column(db.DateTime, default=datetime.utcnow)
 
+
+    comments = db.relationship('Comment', backref='user')
     # posts relationship
     posts = db.relationship('Post', backref='user', lazy=True)
     # followers relationship
@@ -129,6 +131,8 @@ class Post(db.Model, SerializerMixin):
 
 class Comment(db.Model, SerializerMixin):
     __tablename__= 'comments'
+ 
+    serialize_rules= ('-post', '-user')
 
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.Text, nullable=False)

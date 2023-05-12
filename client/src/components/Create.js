@@ -3,7 +3,7 @@ import "./styles/Create.css"
 
 function Create() {
   const [file, setFile] = useState(null);
-  const [caption, setCaption] = useState(null)
+  const [caption, setCaption] = useState('HELLO')
 
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
@@ -16,7 +16,7 @@ function Create() {
   }
   
   const handleSubmit = (event) => {
-    event.preventDefault();
+
 
     if (!file) {
       console.log('No file selected');
@@ -33,10 +33,12 @@ function Create() {
         method: 'POST',
         body: formData,
       })
-      .then((r) => r.json())
-      .then((d) => {
-        setFile(null)
-        setCaption(null);
+      .then((r) =>{
+
+        setFile('')
+        setCaption('');
+ 
+
       })
     } catch (error) {
       console.error('Error occurred during image upload:', error);
@@ -51,7 +53,7 @@ function Create() {
       <input type="file" onChange={handleFileChange} accept="image/*" />
       {file && (
         <div>
-          <img src={URL.createObjectURL(file)} alt="Selected file" />
+          <img className="preview-image" src={URL.createObjectURL(file)} alt="Selected file" />
         </div>
       )}
       <input type="text" onChange={handleCaptionChange} placeholder="Add a caption"  value={caption}/>

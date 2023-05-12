@@ -1,0 +1,201 @@
+.post-container {
+    flex-wrap: nowrap;
+    display: flex;
+    height: 75vh;
+    justify-content: space-between;
+    gap: 20px; /* Adjust this value for the desired space between the post card and the comment form */
+  }
+  
+
+  .comment-form-container {
+    flex-basis: 70%; /* Adjust this value for the desired width of the comment form */
+    min-width: 100px;
+    height: 90vh;
+
+    background-color: #c5ddba;
+    border-radius: 10px;
+    padding: 40px;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.243);
+ 
+    /* border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px; */
+  }
+
+
+  .post-card {
+ 
+    flex-basis: 30%; /* Adjust this value for the desired width of the post card */
+    min-width: 500px; 
+    max-width: 800px; 
+    width: 450px;
+    margin: 0 auto;
+    text-align: center;
+    border: 1px solid #ccccccf0;
+    padding: 20px;
+    background-color: #fff;
+    margin-left: 41%;
+}
+
+.post-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.user-name {
+    font-weight: 100;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-size: 30px;
+}
+
+.user-profile-photo {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.post-image {
+    width: 100%;
+    margin-bottom: 10px;
+    border-radius: 3px;
+}
+
+.post-footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.likes-title {
+    font-weight: 100;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    text-align: left;
+    margin-bottom: 30px;
+}
+
+.date-title {
+    font-weight: 100;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-size: 13px;
+}
+
+.like-btn,
+.comment-btn {
+    background-color: transparent;
+    border: none;
+    margin-right: 10px;
+    cursor: pointer;
+    flex: 1;
+    margin-bottom: 17px;
+}
+
+.like-btn i,
+.comment-btn i {
+    margin-right: 5px;
+}
+
+.like-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    border: none;
+    background-color: transparent;
+    position: relative;
+}
+
+.like-btn::after {
+    width: fit-content;
+    height: fit-content;
+    position: absolute;
+    font-size: 15px;
+    color: rgb(80, 80, 80);
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    opacity: 0;
+    visibility: hidden;
+    transition: .2s linear;
+    top: 115%;
+}
+
+.icon {
+    width: 30px;
+    height: 30px;
+    transition: .2s linear;
+}
+
+.iconn {
+    width: 30px;
+    height: 30px;
+    transition: .2s linear;
+}
+
+.icon path {
+    fill: rgba(49, 49, 49, 0.687);
+    transition: .2s linear;
+}
+
+.like-btn:hover>.icon {
+    transform: scale(1.2);
+}
+
+.like-btn:hover>.icon path {
+    fill: rgb(235, 107, 129);
+}
+
+.like-btn>.iconn path {
+    fill: rgb(235, 107, 129);
+    top: 105%;
+
+}
+
+
+.like-btn:hover::after {
+    visibility: visible;
+    opacity: 1;
+    top: 105%;
+}
+
+
+
+.buttons-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.comments-title {
+    text-align: left;
+    font-weight: 200;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.comments {
+    margin-top: 10px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.comment {
+    margin-bottom: 10px;
+    text-align: left;
+}
+
+.comment-author {
+    margin-bottom: 5px;
+    font-size: smaller;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    text-align: left;
+}
+
+.comment-text {
+    margin: 0;
+}
+
+
+
