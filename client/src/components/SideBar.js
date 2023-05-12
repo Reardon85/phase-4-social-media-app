@@ -55,7 +55,7 @@ function SideBar({ onLogout, user }) {
 
             <NavLink to={`/create`} activeClassName="active">
 
-                <img src="/images/plus.png" alt="Home Icon" className='icons' /> Create
+                <img src="/images/plus.png" alt="Home Icon" className='icons' /> Create Post
 
             </NavLink>
 
