@@ -2,6 +2,8 @@ import React, { useState, useRef } from 'react';
 import "./styles/Create.css"
 
 function Create() {
+
+
   const [file, setFile] = useState(null);
   const [caption, setCaption] = useState('HELLO')
 

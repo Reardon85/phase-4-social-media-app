@@ -28,35 +28,12 @@ function SideBar({ onLogout, user }) {
 
 
 
-
-
-
-
-
     return (
         <div className="sidebar">
             <Link to="/">
                 <div className="logo-container">
                     <h1 className="logo">The Tea</h1>
-                <div class="loader"></div>
-                <div class="steaming-coffee">
-                   <div class="cup"></div>
-                   <div class="saucer"></div>
-                <div class="test">
-                <div class="steam">
-                   <div class="one"></div>
-                   <div class="two"></div>
-                   </div>
-                <div class="steam-2">
-                   <div class="one"></div>
-                   <div class="two"></div>
-                   </div>
-                <div class="steam-3">
-                   <div class="one"></div>
-                   <div class="two"></div>
-                   </div>
-                </div>
-                </div>
+                    <img className='logo-img' src='/mstile-150x150.png'></img>
                 </div>
             </Link>
             <Search />
@@ -78,7 +55,7 @@ function SideBar({ onLogout, user }) {
 
             <NavLink to={`/create`} activeClassName="active">
 
-                <img src="/images/plus.png" alt="Home Icon" className='icons' /> Create
+                <img src="/images/plus.png" alt="Home Icon" className='icons' /> Create Post
 
             </NavLink>
 

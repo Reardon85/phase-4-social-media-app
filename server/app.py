@@ -19,8 +19,10 @@ def upload_image():
                         aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'))
 
     bucket = s3.Bucket('the-tea')
+
     bucket.put_object(Key=file.filename, Body=file)
   
+
 
     file_url = f"https://{bucket.name}.s3.amazonaws.com/{file.filename}"
 
@@ -34,7 +36,38 @@ def upload_image():
 
 
 
+@app.route('/update-profile', methods=['PATCH'])
+def update_profile():
+    if request.values['fileExists'] == 'true':
+        print(request.values['fileExists'])
+        file = request.files['image']
+        s3 = boto3.resource('s3', aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
+                            aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'))
+        bucket = s3.Bucket('the-tea')
+        test = bucket.put_object(Key=file.filename, Body=file)
+        file_url = f"https://{bucket.name}.s3.amazonaws.com/{file.filename}"
+    else:
+        file = None
+    bio = request.values['bio']
+    email = request.values['email']
+    
 
+
+
+
+
+    the_user =User.query.filter_by(id=session['user_id']).first()
+    the_user.update_activity()
+
+    if file:
+        the_user.avatar_url = file_url
+    
+    the_user.bio = bio
+    the_user.email = email
+
+    db.session.add(the_user)
+    db.session.commit()
+    return 'Image uploaded successfully!'
 
 
 

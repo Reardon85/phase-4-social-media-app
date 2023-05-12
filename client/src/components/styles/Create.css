@@ -29,7 +29,7 @@
 }
 
 .upload-container button {
-    background-color: #007bff;
+    background-color: #afcd7e;
     color: #fff;
     border: none;
     padding: 10px 20px;
@@ -38,7 +38,7 @@
 }
 
 .upload-container button:hover {
-    background-color: #0062cc;
+    background-color: #a7c741;
 }
 
 .upload-container input[type="text"] {
@@ -53,6 +53,6 @@
 
 .upload-container input[type="text"]:focus {
     outline: none;
-    border-color: #007bff;
-    box-shadow: 0px 0px 5px 0px rgba(0, 123, 255, 0.5);
+    border-color: #d5ffc6;
+    box-shadow: 0px 0px 5px 0px rgba(1, 144, 68, 0.197);
 }
