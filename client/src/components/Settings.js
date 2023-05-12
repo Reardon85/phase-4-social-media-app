@@ -4,6 +4,9 @@ import "./styles/Settings.css"
 function Settings() {
 
   const [file, setFile] = useState(null);
+  const [email, setEmail] = useState('');
+  const [bio, setBio] = useState('');
+
 
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
@@ -13,17 +16,20 @@ function Settings() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (!file) {
-      console.log('No file selected');
-      return;
-    }
-
     const formData = new FormData();
+    if (file === null) {
+      formData.append('fileExists', 'false')
+      console.log(file)
+    } else {
+      formData.append('fileExists', 'true')
+    }
     formData.append('image', file);
+    formData.append('bio', bio)
+    formData.append('email', email)
 
     try {
-      await fetch('/upload_image', {
-        method: 'POST',
+      await fetch('/update-profile', {
+        method: 'PATCH',
         body: formData,
       });
     } catch (error) {
@@ -31,22 +37,33 @@ function Settings() {
     }
   };
 
+  const handleBioChange = (event) => {
+    console.log(event.target.value)
+    setBio((bio) => event.target.value)
+  }
+
+  const handleEmailChange = (event) => {
+    console.log(event.target.value)
+    setEmail((email) => event.target.value)
+  }
+
 
 
   return (
     <div class="upload-container">
-      <h1>Upload an Image</h1>
+      <img></img>
+      <h2 className='pi' >Change Profile Image</h2>
       <input type="file" onChange={handleFileChange} accept="image/*" />
       {file && (
         <div>
-          <img src={URL.createObjectURL(file)} alt="Selected file" />
+          <img className='preview-image' src={URL.createObjectURL(file)} alt="Selected file" />
         </div>
       )}
-      <h2>Name:</h2>
-      <input type="text" placeholder="Add a caption" />
+      <h2>Email:</h2>
+      <input onChange={handleEmailChange} type="text" value={email} />
       <h2>Bio:</h2>
-      <input type="text" placeholder="Add a caption" />
-      <button onClick={handleSubmit}>Upload</button>
+      <input onChange={handleBioChange} type="text" value={bio} />
+      <button onClick={handleSubmit}>Update</button>
     </div>
   );
 }
