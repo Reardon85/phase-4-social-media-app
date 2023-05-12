@@ -13,6 +13,11 @@
     margin-left: 43%;
 }
 
+.preview-image {
+    max-height: 20vh;
+    width: auto; /* maintain aspect ratio */
+  }
+
 .upload-container h1 {
     font-size: 2rem;
     margin: 0 0 20px 0;

@@ -14,13 +14,14 @@ from config import app, db, api
 def upload_image():
     file = request.files['image']
     content = request.values['content']
+
     s3 = boto3.resource('s3', aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
                         aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'))
-    
 
     bucket = s3.Bucket('the-tea')
 
-    test = bucket.put_object(Key=file.filename, Body=file)
+    bucket.put_object(Key=file.filename, Body=file)
+  
 
 
     file_url = f"https://{bucket.name}.s3.amazonaws.com/{file.filename}"
@@ -276,8 +277,9 @@ class Home_ForYou(Resource):
 
         for post in post_dicts:
             user = User.query.filter_by(id=post['user_id']).first()
-            user_dict = user.to_dict(only=('avatar_url', 'username'))
+            user_dict = user.to_dict(only=('avatar_url', 'username', '-id'))
             liked = Like.query.filter_by(post_id=post['id']).filter_by(user_id=session['user_id']).first()
+            
 
             like_dict = {
                 'liked': (not liked == None)
@@ -329,7 +331,7 @@ class PostsById(Resource):
         }
         
         
-        return make_response({**post.to_dict(rules=('like_count', 'comments')), **like_dict, ** user_dict}, 200)
+        return make_response({**post.to_dict(rules=('like_count',)), **like_dict, ** user_dict}, 200)
 # do we need to get a post by id?
 # - Good point. I guess it depends on how we impliment the whole clicking on a post and making it bigger thing?
 # But you're right, if they are clicking on the post then that means react already has the post's information. 
@@ -345,32 +347,30 @@ class PostsById(Resource):
 api.add_resource(PostsById, '/posts/<int:id>')
 
 class Comments(Resource):
-    def get(self):
-        comments_list = []
-        for c in Comment.query.all():
-            comments_dict = {
-                'id': c.id,
-                'content': c.content,
-                'date_commented': c.date_commented
-            }
-            comments_list.append(comments_dict)
-        return make_response(comments_list, 200)
-    
     def post(self):
+        data = request.get_json()
         the_user = User.query.filter_by(id=session['user_id']).first()
         the_user.update_activity()
 
-        data = request.get_json()
-        comment = Comment(content = data['content'])
+        comment = Comment(content = data['text'], post_id=data['postId'], user_id= session['user_id'])
         try:
             db.session.add(comment)
             db.session.commit()
-            return make_response(comment.to_dict(), 201)
+            return make_response({**comment.to_dict(), **the_user.to_dict(only=('avatar_url', 'username'))}, 201)
         except Exception as ex:
             return make_response({'error': [ex.__str__()]}, 422)
 api.add_resource(Comments, '/comments')
 
 class CommentsById(Resource):
+    def get(self, id):
+
+        test = Comment.query.all()
+        print(test)
+        
+        comments_list =[{**comment.to_dict(), **comment.user.to_dict(only=('avatar_url', "username")) } for comment in Comment.query.filter(Comment.post_id == id).all()]
+
+        return make_response(comments_list, 200)
+    
     def delete(self, id):
         comment = Comment.query.filter_by(id = id).first()
         if comment == None:
