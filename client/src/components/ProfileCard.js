@@ -1,10 +1,42 @@
 import React, { useEffect } from 'react'
+import { useNavigate } from "react-router-dom";
+
 import "./styles/ProfileCard.css"
 
 
-function ProfileCard({ profileInfo, amFollowing, handleFollow, handleSettings }) {
-
+function ProfileCard({ profileInfo, amFollowing, setRefrehState, userId}) {
     // useEffect()
+    const navigate = useNavigate()
+    
+    function handleSettings(){ 
+        navigate("/settings")
+    }
+
+    function handleFollow(following) {
+        if (following) {
+            fetch(`/follow/${userId}`, {
+                method: 'DELETE',
+            }).then((r) => {
+                setRefrehState((refreshState) => !refreshState)
+            })
+        }
+        else {
+            fetch('/follow', {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ userId: userId })
+
+            })
+                .then((r) => {
+                    if (r.ok) {
+                        setRefrehState((refreshState) => !refreshState)
+                    }
+                })
+        }
+    }
+
 
 
 

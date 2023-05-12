@@ -10,24 +10,26 @@ from models import User, Post, Comment, Like, following
 from config import app, db, api
 
 
-@app.route('/upload_image', methods=['POST'])
+@app.route('/create-post', methods=['POST'])
 def upload_image():
     file = request.files['image']
-    print(file)
+    content = request.values['content']
     s3 = boto3.resource('s3', aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
                         aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'))
     
-    print(s3)
+
     bucket = s3.Bucket('the-tea')
-    print(bucket)
+
     test = bucket.put_object(Key=file.filename, Body=file)
   
 
     file_url = f"https://{bucket.name}.s3.amazonaws.com/{file.filename}"
-    print(file_url)
+
     the_user =User.query.filter_by(id=session['user_id']).first()
-    the_user.avatar_url = file_url
-    db.session.add(the_user)
+    the_user.update_activity()
+
+    new_posts = Post(user_id=the_user.id, content=content, image=file_url)
+    db.session.add(new_posts)
     db.session.commit()
     return 'Image uploaded successfully!'
 
@@ -151,7 +153,8 @@ class Users_By_Id(Resource):
                 'followers':len(profile_user.to_dict(only=("followed_by",))['followed_by']),
                 'active':profile_user.active_recently()
             },
-            'posts': profile_user.to_dict(only=("posts",))['posts'],
+            'posts': [post.to_dict(rules=('like_count', 'comment_count')) for post in profile_user.posts],
+            # profile_user.to_dict(only=("posts",))['posts'],
             'am_following': am_following
         }   
         return make_response(profile_dict, 200)
@@ -278,10 +281,24 @@ api.add_resource(Posts, '/posts')
 
 class PostsById(Resource):
     def get(self, id):
-        p_instance = Post.query.filter_by(id = id).first()
-        if p_instance == None:
+        post = Post.query.filter_by(id = id).first()
+        if post == None:
             return make_response({"error": "Post not found"}, 404)
-        return make_response(p_instance.to_dict(), 200)
+        
+
+        liked = Like.query.filter_by(post_id=id).filter_by(user_id=session['user_id']).first()
+
+        like_dict = {
+            'liked': (not liked == None)
+        }
+        
+        user_dict = {
+            'avatar_url': post.user.avatar_url,
+            'username': post.user.username
+        }
+        
+        
+        return make_response({**post.to_dict(rules=('like_count', 'comments')), **like_dict, ** user_dict}, 200)
 # do we need to get a post by id?
 # - Good point. I guess it depends on how we impliment the whole clicking on a post and making it bigger thing?
 # But you're right, if they are clicking on the post then that means react already has the post's information. 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 
 import { useParams, useNavigate } from "react-router-dom";
-
+import './styles/ForYou.css';
 import "./styles/ProfilePage.css"
 import ProfileCard from './ProfileCard'
 import ForYouCard from './ForYouCard'
@@ -14,16 +14,7 @@ function ProfilePage() {
     const [amFollowing, setAmFollowing] = useState([false, true])
     const [refreshState, setRefrehState] = useState(false)
 
-
-
-    const navigate = useNavigate()
-
-    console.log(useParams())
-
-
     useEffect(() => {
-
-
         fetch(`/users/${userId}`)
 
             .then((r) => {
@@ -31,52 +22,38 @@ function ProfilePage() {
                     r.json().then((data) => {
                         setProfileInfo(data['profile_info'])
                         setPostList(data['posts'])
+                        console.log(data['posts'])
                         setAmFollowing(data['am_following'])
                         console.log(data)
                     })
                 }
             })
 
-
-
     }, [refreshState, userId])
 
-    function handleFollow(following) {
-        if (following) {
-            fetch(`/follow/${userId}`, {
-                method: 'DELETE',
-            }).then((r) => {
-                setRefrehState((refreshState) => !refreshState)
-            })
-        }
-        else {
-            fetch('/follow', {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ userId: userId })
 
-            })
-                .then((r) => {
-                    if (r.ok) {
-                        setRefrehState((refreshState) => !refreshState)
-                    }
-                })
-        }
-    }
+    const post_array = postList.map((post) => (
+        <div className="post-container" key={post.id}>
+            <ForYouCard {...post} />
+        </div>
+    ));
 
 
-    function handleSettings() {
 
-        navigate("/settings")
-    }
+
 
 
     return (
         <div className='profile-page'>
 
-            <ProfileCard profileInfo={profileInfo} amFollowing={amFollowing} handleFollow={handleFollow} handleSettings={handleSettings} />
+            <ProfileCard profileInfo={profileInfo} amFollowing={amFollowing} setRefrehState={setRefrehState} userId={userId} />
+            <div>
+
+                <div className="image-grid">{post_array}</div>;
+                    {/* <button className="more-btn" onClick={() => setTotal((total) => total + 21)}>
+                        {morePosts ? "MORE POSTS" : "NO MORE POSTS"}
+                    </button> */}
+                </div>
 
 
         </div>

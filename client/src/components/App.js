@@ -47,9 +47,10 @@ function App() {
           <Route path='/' element={<Home setRefreshStage={setRefrehState} refreshState={refreshState} />} />
           <Route path='/foryou' element={<ForYou />} />
           <Route path="/profile/:userId" element={<ProfilePage setRefreshStage={setRefrehState} refreshState={refreshState} />} />
-          <Route path='/post/:postId' element={<PostCard setRefreshStage={setRefrehState} refreshState={refreshState} />} />
+          <Route path='/posts/:postId' element={<PostCard setRefreshStage={setRefrehState} refreshState={refreshState} />} />
           <Route path='/create' element={<Create />} />
           <Route path='/search' element={<Search />} />
+
 
         </Routes>
       </div>
