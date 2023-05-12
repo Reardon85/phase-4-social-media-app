@@ -59,3 +59,14 @@
     background-color: transparent;
     border: none;
 }
+
+input[type="text"],
+select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: none;
+    border-radius: 5px;
+    /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); */
+    font-size: 1rem;
+}

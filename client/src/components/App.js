@@ -4,7 +4,7 @@ import SideBar from './SideBar';
 import Home from './Home';
 import ForYou from './ForYou';
 import Search from './Search';
-
+import Settings from './Settings';
 
 import ProfilePage from './ProfilePage';
 import Create from './Create';
@@ -50,6 +50,7 @@ function App() {
           <Route path='/post/:postId' element={<PostCard setRefreshStage={setRefrehState} refreshState={refreshState} />} />
           <Route path='/create' element={<Create />} />
           <Route path='/search' element={<Search />} />
+          <Route path='Settings' element={<Settings />} />
 
         </Routes>
       </div>
