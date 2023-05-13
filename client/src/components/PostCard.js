@@ -7,29 +7,29 @@ function PostCard() {
 
     const [likes, setlikes] = useState(0)
     const [like, setlike] = useState(false)
-    const {postId} = useParams()
+    const { postId } = useParams()
     const [comments, setComments] = useState([])
     const [postInfo, setPostInfo] = useState([])
 
-    useEffect( ()=>{
+    useEffect(() => {
 
         fetch(`/posts/${postId}`)
-        .then((r) =>{
-            if(r.ok){
-                r.json().then((d) =>{
-       
-
-                    setlikes(d.like_count)
-                    setlike(d.liked)
-                    setPostInfo([d.id, d.avatar_url, d.username, d.user_id, d.image, d.content, d.date_posted])
-
-                })
-            }
-        })
+            .then((r) => {
+                if (r.ok) {
+                    r.json().then((d) => {
 
 
+                        setlikes(d.like_count)
+                        setlike(d.liked)
+                        setPostInfo([d.id, d.avatar_url, d.username, d.user_id, d.image, d.content, d.date_posted])
 
-    },[])
+                    })
+                }
+            })
+
+
+
+    }, [])
     console.log(comments)
 
 
@@ -74,7 +74,7 @@ function PostCard() {
             console.log(postInfo)
         }
     }
-   
+
     return (
 
         <div className="post-container">
@@ -99,9 +99,9 @@ function PostCard() {
                     {/* <button className="comment-btn"><i className="fas fa-comment"></i> Comment</button> */}
 
                 </div>
-            </div>    
+            </div>
             <div className="comment-form-container">
-                <CommentForm postId={postId}/>
+                <CommentForm postId={postId} />
             </div>
 
         </div>
