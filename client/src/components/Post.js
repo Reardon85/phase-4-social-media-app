@@ -49,14 +49,14 @@ function Post({ user_id, image, date_posted, like_count, id, content, avatar_url
     }
 
     return (
-        
+
         <div className="post-card">
             <div className="post-header">
                 <Link to={`/profile/${user_id}`} ><img src={avatar_url} alt="User Profile" className="user-profile-photo" /></Link>
                 <Link to={`/profile/${user_id}`} style={{ textDecoration: 'none', color: 'inherit' }}><h2 className="user-name">{username}</h2></Link>
             </div>
             <Link to={`/posts/${id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-            <img src={image} alt="Post" className="post-image" />
+                <img src={image} alt="Post" className="post-image" />
             </Link>
             <div className="post-footer">
 
@@ -78,14 +78,14 @@ function Post({ user_id, image, date_posted, like_count, id, content, avatar_url
                     <div className="comment">
                         <h3 className="comment-author">Bob Johnson</h3>
                         <p className="comment-text">Thanks for sharing!</p>
-                    </div> */} 
+                    </div> */}
                 </div>
-                
-           
+
+
             </div>
-        
+
         </div>
-      
+
     );
 }
 

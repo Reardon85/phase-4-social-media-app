@@ -22,7 +22,8 @@
 .comment-author {
   margin: 0;
   font-size: 1.2em;
-  color: #5c6649;;
+  color: #5c6649;
+  ;
 }
 
 .comment-text {
@@ -34,5 +35,3 @@
   font-size: 0.8em;
   color: #777;
 }
-
-

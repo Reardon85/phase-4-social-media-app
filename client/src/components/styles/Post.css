@@ -5,7 +5,7 @@
     border: 1px solid #ccccccf0;
     padding: 20px;
     background-color: #fff;
-    margin-left: 41%;
+
 }
 
 .post-header {
@@ -29,6 +29,7 @@
 
 .post-image {
     width: 100%;
+
     margin-bottom: 10px;
     border-radius: 3px;
 }
