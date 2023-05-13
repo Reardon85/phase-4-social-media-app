@@ -11,6 +11,15 @@ from config import db, bcrypt
 
 
 
+notification = db.Table('notifications',
+                    db.Column('id', db.Integer, primary_key=True),
+                    db.Column('receiving_user_id', db.Integer, db.ForeignKey('users.id')),
+                    db.Column('action_user_id', db.Integer, db.ForeignKey('users.id')),
+                    db.Column('post_id', db.Integer, db.ForeignKey('posts.id')),
+                    db.Column('action', db.String),
+                    db.Column('seen', db.Boolean)
+                    )
+
 
 
 following = db.Table('following',
@@ -32,6 +41,7 @@ class User(db.Model, SerializerMixin):
     last_request = db.Column(db.DateTime, default=datetime.utcnow)
 
 
+
     comments = db.relationship('Comment', backref='user')
     # posts relationship
     posts = db.relationship('Post', backref='user', lazy=True)
@@ -41,6 +51,13 @@ class User(db.Model, SerializerMixin):
                                 primaryjoin=(following.c.followed_id == id),
                                 secondaryjoin=(following.c.follower_id == id),
                                 backref=db.backref('followed_by',))
+    
+    # followers relationship
+    notification_given = db.relationship('User', 
+                                secondary=notification,
+                                primaryjoin=(notification.c.action_user_id == id),
+                                secondaryjoin=(notification.c.receiving_user_id == id),
+                                backref=db.backref('notification_received',))
     
     @hybrid_property
     def password_hash(self):
@@ -158,21 +175,3 @@ class Like(db.Model, SerializerMixin):
 
 
 
-
-# class Like(db.Model, SerializerMixin):
-#     __tablename__ = 'likes'
-
-
-
-#     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-
-#     # user_id foreign key
-#     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-
-#     # post_id foreign key
-#     post_id = db.Column(db.Integer, db.ForeignKey('posts.id'), nullable=False)
-
-
-
-    def __repr__(self):
-        return f"Like('{self.post_id}', '{self.user_id}')"
