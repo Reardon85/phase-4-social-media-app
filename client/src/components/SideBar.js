@@ -67,7 +67,7 @@ function SideBar({ onLogout, user }) {
             </NavLink>
 
             <NavLink exact to="/notifications" activeClassName="active" className={activeNotification ? 'active-notify' : 'inactive-notify'}>
-                <img src={activeNotification ? "/images/notification.png" : "/images/notification.png"} alt="Home Icon" className='icons' /> Notifications
+                <img src={activeNotification ? "/images/notification-active.png" : "/images/notification.png"} alt="Home Icon" className='icons' /> Notifications
             </NavLink>
 
             <NavLink exact to="/messages" activeClassName="active" className={activeNotification ? 'active-notify' : 'inactive-notify'}>
