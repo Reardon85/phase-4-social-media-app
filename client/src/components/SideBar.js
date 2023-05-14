@@ -53,6 +53,10 @@ function SideBar({ onLogout, user }) {
 
             </NavLink>
 
+            <NavLink exact to="/notifications" activeClassName="active">
+                <img src="/images/home.png" alt="Home Icon" className='icons' /> Notifications
+            </NavLink>
+
             <NavLink to={`/create`} activeClassName="active">
 
                 <img src="/images/plus.png" alt="Home Icon" className='icons' /> Create Post

@@ -6,8 +6,31 @@ load_dotenv()
 from flask import request, make_response, abort, jsonify, render_template, session
 from flask_restful import  Resource
 from sqlalchemy.exc import IntegrityError
-from models import User, Post, Comment, Like, following
+from models import User, Post, Comment, Like, following, Notification
 from config import app, db, api
+
+
+
+@app.route('/notification')
+def get_notifications():
+    the_user =User.query.filter_by(id=session['user_id']).first()
+    the_user.update_activity()
+
+    
+    for notification in the_user.notifications_received:
+        
+        if notification.post_id:
+            print(notification.post_id)
+
+        notification_dict = {
+            **notification.to_dict(),
+            **notification.giver.to_dict(only=('avatar_url', 'username' )),
+
+        }
+
+    return make_response('', 200)
+    
+
 
 
 @app.route('/create-post', methods=['POST'])
@@ -35,41 +58,57 @@ def upload_image():
     return 'Image uploaded successfully!'
 
 
+class Update_Profile(Resource):
+    def get(self):
+        the_user =User.query.filter_by(id=session['user_id']).first()
+        the_user.update_activity()
 
-@app.route('/update-profile', methods=['PATCH'])
-def update_profile():
-    if request.values['fileExists'] == 'true':
-        print(request.values['fileExists'])
-        file = request.files['image']
-        s3 = boto3.resource('s3', aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
-                            aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'))
-        bucket = s3.Bucket('the-tea')
-        test = bucket.put_object(Key=file.filename, Body=file)
-        file_url = f"https://{bucket.name}.s3.amazonaws.com/{file.filename}"
-    else:
-        file = None
-    bio = request.values['bio']
-    email = request.values['email']
-    
+        return make_response(the_user.to_dict(only=('avatar_url', 'bio', 'email')))
+        
 
 
+    def patch(self):
+        the_user =User.query.filter_by(id=session['user_id']).first()
+        the_user.update_activity()
+
+        if request.values['fileExists'] == 'true':
+            print(request.values['fileExists'])
+            file = request.files['image']
+            s3 = boto3.resource('s3', aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
+                                aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'))
+            bucket = s3.Bucket('the-tea')
+            test = bucket.put_object(Key=file.filename, Body=file)
+            file_url = f"https://{bucket.name}.s3.amazonaws.com/{file.filename}"
+        else:
+            file = None
+
+        if  not(request.values['currentPassword'] == 'null') and not(request.values['newPassword'] == 'null'):
+
+            if the_user.authenticate(request.values['currentPassword']):
+                the_user.password_hash = request.values['newPassword']
+                db.session.add(the_user)
+                db.session.commit()
 
 
 
-    the_user =User.query.filter_by(id=session['user_id']).first()
-    the_user.update_activity()
-
-    if file:
-        the_user.avatar_url = file_url
-    
-    the_user.bio = bio
-    the_user.email = email
-
-    db.session.add(the_user)
-    db.session.commit()
-    return 'Image uploaded successfully!'
 
 
+        bio = request.values['bio']
+        email = request.values['email']
+        
+
+
+        if file:
+            the_user.avatar_url = file_url
+        
+        the_user.bio = bio
+        the_user.email = email
+
+        db.session.add(the_user)
+        db.session.commit()
+        return 'Image uploaded successfully!'
+
+api.add_resource(Update_Profile, '/update-profile')
 
 
 
@@ -107,12 +146,6 @@ class CheckSession(Resource):
 
         the_user = User.query.filter_by(id=session['user_id']).first()
         the_user.update_activity()
-        print("following:")
-        print(the_user.following)
-        print("Followed by")
-        print(the_user.followed_by)
-        print(the_user.avatar_url)
-        print(the_user.bio)
         return make_response(the_user.to_dict(), 200)
 api.add_resource(CheckSession, '/check_session')
     
@@ -161,6 +194,9 @@ class Users_By_Id(Resource):
     def get(self, id):
         the_user = User.query.filter_by(id=session['user_id']).first()
         the_user.update_activity()
+
+        print(the_user.notifications_received)
+
         am_following = [False, False]
         profile_user = User.query.filter_by(id = id).first()
         if profile_user == None:
@@ -352,10 +388,11 @@ class Comments(Resource):
         the_user = User.query.filter_by(id=session['user_id']).first()
         the_user.update_activity()
 
-        comment = Comment(content = data['text'], post_id=data['postId'], user_id= session['user_id'])
         try:
+            comment = Comment(content = data['text'], post_id=data['postId'], user_id= session['user_id'])
             db.session.add(comment)
             db.session.commit()
+            add_notification(type=2, the_user=the_user, receiving_user_id=comment.post.user_id, post_id=data['postId'])
             return make_response({**comment.to_dict(), **the_user.to_dict(only=('avatar_url', 'username'))}, 201)
         except Exception as ex:
             return make_response({'error': [ex.__str__()]}, 422)
@@ -392,6 +429,8 @@ class Follows(Resource):
         the_user.following.append(follow_user)
 
         db.session.commit()
+
+        add_notification(type=1, the_user=the_user, receiving_user_id=follow_id)
         return make_response(follow_user.to_dict(only=('username', 'id')), 201)
 api.add_resource(Follows, '/follow')
 
@@ -408,6 +447,9 @@ class Follow_By_Id(Resource):
 api.add_resource(Follow_By_Id, '/follow/<int:id>')
 
 
+
+
+
 class Likes_By_Id(Resource):
     def post(self, id):
         the_user = User.query.filter_by(id=session['user_id']).first()
@@ -417,6 +459,8 @@ class Likes_By_Id(Resource):
         db.session.add(like_obj)
         db.session.commit()
 
+        
+        add_notification(type=0, the_user=the_user, receiving_user_id=like_obj.post.user_id, post_id=id)
         return make_response(like_obj.to_dict(), 201)
 
     def delete(self, id):
@@ -432,6 +476,26 @@ class Likes_By_Id(Resource):
 
         return make_response({"message":"Like Successfully Deleted"}, 204)
 api.add_resource(Likes_By_Id, '/likes/<int:id>')
+
+
+def add_notification(type, the_user, receiving_user_id, post_id=False):
+
+    action_list = [
+        "liked your photo",
+        'started following you',
+        'commented on your photo'
+    ]
+
+    new_notification = {
+        'receiving_user_id': receiving_user_id,  
+        'action_user_id': session['user_id'],  
+        'post_id': post_id, 
+        'action': action_list[type], 
+        'seen': False
+    }
+
+    db.session.execute(notification.insert().values(**new_notification))
+    db.session.commit()
 
 
 

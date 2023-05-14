@@ -58,6 +58,7 @@ function Create() {
           <img className="preview-image" src={URL.createObjectURL(file)} alt="Selected file" />
         </div>
       )}
+      <h3>Description:</h3>
       <input type="text" onChange={handleCaptionChange} placeholder="Add a caption"  value={caption}/>
       <button onClick={handleSubmit}>Upload</button>
     </div>

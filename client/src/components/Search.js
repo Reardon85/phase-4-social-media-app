@@ -54,6 +54,10 @@ function Search() {
                     class="sinput"
                     name="text"
                     type="text"
+              
+                    autocomplete="off"
+                    readonly 
+                    onfocus="this.removeAttribute('readonly');"
                     value={searchTerm}
                     onChange={handleInputChange}
                 />
