@@ -15,16 +15,16 @@ function SideBar({ onLogout, user }) {
     const [activeNotification, setActiveNotification] = useState(false)
 
 
-    useEffect(()=> {
+    useEffect(() => {
 
         fetch('/active-notifications')
-        .then((r) => r.json())
-        .then((d) => setActiveNotification(d['active']))
+            .then((r) => r.json())
+            .then((d) => setActiveNotification(d['active']))
 
 
 
-    },[param])
-    
+    }, [param])
+
 
     const handleclick = () => {
 
@@ -66,15 +66,15 @@ function SideBar({ onLogout, user }) {
 
             </NavLink>
 
-            <NavLink exact to="/notifications" activeClassName="active"  className={activeNotification ? 'active-notify' : 'inactive-notify'}>
-                <img src={activeNotification ? "/images/home.png" : "/images/foryou.png"  } alt="Home Icon" className='icons' /> Notifications
+            <NavLink exact to="/notifications" activeClassName="active" className={activeNotification ? 'active-notify' : 'inactive-notify'}>
+                <img src={activeNotification ? "/images/notification.png" : "/images/notification.png"} alt="Home Icon" className='icons' /> Notifications
             </NavLink>
 
-            <NavLink exact to="/messages" activeClassName="active"  className={activeNotification ? 'active-notify' : 'inactive-notify'}>
-                <img src={activeNotification ? "/images/home.png" : "/images/foryou.png"  } alt="Home Icon" className='icons' /> Messages
+            <NavLink exact to="/messages" activeClassName="active" className={activeNotification ? 'active-notify' : 'inactive-notify'}>
+                <img src={activeNotification ? "/images/home.png" : "/images/message.png"} alt="Home Icon" className='icons' /> Messages
             </NavLink>
 
-            <NavLink to={`/create`} activeClassName="active"> 
+            <NavLink to={`/create`} activeClassName="active">
 
                 <img src="/images/plus.png" alt="Home Icon" className='icons' /> Create Post
 

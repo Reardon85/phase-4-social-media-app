@@ -41,6 +41,10 @@
     color: #ebeee1;
 }
 
+.sidebar:hover {
+    background-color: #1e1e1e;
+}
+
 .logo {
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
     color: #91A93C;
