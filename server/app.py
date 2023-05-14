@@ -485,21 +485,32 @@ class Likes_By_Id(Resource):
 api.add_resource(Likes_By_Id, '/likes/<int:id>')
 
 
-def add_notification(type, the_user, receiving_user_id, post_id=0):
+def add_notification(type, the_user, receiving_user_id, post_id=False):
 
     action_list = [
         " liked your photo ",
         ' started following you ',
         ' commented on your photo '
     ]
+
     if not the_user.id == receiving_user_id:
-        new_notification = Notification(
-            receiving_user_id= receiving_user_id,  
-            action_user_id= session['user_id'],  
-            post_id= post_id, 
-            action= action_list[type], 
-            seen= False       
-        )
+        if post_id:
+            new_notification = Notification(
+                receiving_user_id= receiving_user_id,  
+                action_user_id= session['user_id'],  
+                post_id= post_id, 
+                action= action_list[type], 
+                seen= False       
+            )
+        else: 
+            new_notification = Notification(
+                receiving_user_id= receiving_user_id,  
+                action_user_id= session['user_id'],   
+                action= action_list[type], 
+                seen= False
+            )     
+
+
 
 
         db.session.add(new_notification)
