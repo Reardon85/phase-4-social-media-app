@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate, useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import "./styles/SideBar.css"
 import Search from './Search';
@@ -9,9 +9,22 @@ import SearchResult from './SearchResult';
 
 function SideBar({ onLogout, user }) {
 
-
+    const param = useParams()
     const navigate = useNavigate()
-    console.log(user.id)
+
+    const [activeNotification, setActiveNotification] = useState(false)
+
+
+    useEffect(()=> {
+
+        fetch('/active-notifications')
+        .then((r) => r.json())
+        .then((d) => setActiveNotification(d['active']))
+
+
+
+    },[param])
+    
 
     const handleclick = () => {
 
@@ -53,11 +66,11 @@ function SideBar({ onLogout, user }) {
 
             </NavLink>
 
-            <NavLink exact to="/notifications" activeClassName="active">
-                <img src="/images/home.png" alt="Home Icon" className='icons' /> Notifications
+            <NavLink exact to="/notifications" activeClassName="active"  className={activeNotification ? 'active-notify' : 'inactive-notify'}>
+                <img src={activeNotification ? "/images/home.png" : "/images/foryou.png"  } alt="Home Icon" className='icons' /> Notifications
             </NavLink>
 
-            <NavLink to={`/create`} activeClassName="active">
+            <NavLink to={`/create`} activeClassName="active"> 
 
                 <img src="/images/plus.png" alt="Home Icon" className='icons' /> Create Post
 
