@@ -485,7 +485,7 @@ class Likes_By_Id(Resource):
 api.add_resource(Likes_By_Id, '/likes/<int:id>')
 
 
-def add_notification(type, the_user, receiving_user_id, post_id=False):
+def add_notification(type, the_user, receiving_user_id, post_id=0):
 
     action_list = [
         " liked your photo ",
