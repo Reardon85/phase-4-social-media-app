@@ -67,7 +67,7 @@ class Message(db.Model, SerializerMixin):
 class User(db.Model, SerializerMixin):
     __tablename__= 'users'
 
-    serialize_rules= ('-_password_hash', '-following', '-followed_by', '-posts', '-comments', '-notification_received', '-notification_given', '-discussion')
+    serialize_rules= ('-_password_hash', '-following', '-followed_by', '-posts', '-comments', '-notification_received', '-notification_given', '-conversations')
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, nullable=False)
@@ -77,7 +77,7 @@ class User(db.Model, SerializerMixin):
     bio = db.Column(db.String)
     last_request = db.Column(db.DateTime, default=datetime.utcnow)
 
-    conversations = db.relationship("Conversation", foreign_keys=[Conversation.user_one_id, Conversation.user_two_id])
+    # conversations = db.relationship("Conversation", foreign_keys=[Conversation.user_one_id, Conversation.user_two_id])
 
     notifications_received = db.relationship('Notification', 
                                              foreign_keys='Notification.receiving_user_id', 
