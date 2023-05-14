@@ -6,6 +6,7 @@ import ForYou from './ForYou';
 import Search from './Search';
 import Settings from './Settings';
 import Notifications from './Notifications';
+import MessageCenter from './MessageCenter';
 
 import ProfilePage from './ProfilePage';
 import Create from './Create';
@@ -53,6 +54,7 @@ function App() {
           <Route path='/search' element={<Search />} />
           <Route path='/settings' element={<Settings />} />
           <Route path='/notifications' element={<Notifications />} />
+          <Route path='/messages' element={<MessageCenter />} />
 
 
         </Routes>

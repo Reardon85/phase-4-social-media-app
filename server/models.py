@@ -36,6 +36,30 @@ class Notification(db.Model, SerializerMixin):
     created_date = db.Column(db.DateTime, default=datetime.utcnow)
 
 
+class Conversation(db.Model, SerializerMixin):
+    __tablename__ = 'conversations'
+
+    serialize_rules=('-messages',)
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_one_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    user_two_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    updated_at = db.Column(db.DateTime, onupdate=db.func.now())
+
+    messages = db.relationship('Message', backref='conversation', cascade="all, delete, delete-orphan")
+
+class Message(db.Model, SerializerMixin):
+    __tablename__ = "messages"
+
+    serialize_rules=('-conversation',)
+
+    id = db.Column(db.Integer, primary_key=True)
+    conversation_id = db.Column(db.Integer, db.ForeignKey('conversations.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    text = db.Column(db.String, nullable=False)
+    created_at = db.Column(db.DateTime, server_default = db.func.now())
+
+
 
 
 
@@ -43,7 +67,7 @@ class Notification(db.Model, SerializerMixin):
 class User(db.Model, SerializerMixin):
     __tablename__= 'users'
 
-    serialize_rules= ('-_password_hash', '-following', '-followed_by', '-posts', '-comments', '-notification_received', '-notification_given')
+    serialize_rules= ('-_password_hash', '-following', '-followed_by', '-posts', '-comments', '-notification_received', '-notification_given', '-discussion')
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, nullable=False)
@@ -53,6 +77,8 @@ class User(db.Model, SerializerMixin):
     bio = db.Column(db.String)
     last_request = db.Column(db.DateTime, default=datetime.utcnow)
 
+    conversations = db.relationship("Conversation", foreign_keys=[Conversation.user_one_id, Conversation.user_two_id])
+
     notifications_received = db.relationship('Notification', 
                                              foreign_keys='Notification.receiving_user_id', 
                                              backref='receiver', 
@@ -61,6 +87,8 @@ class User(db.Model, SerializerMixin):
                                              foreign_keys='Notification.action_user_id', 
                                              backref='giver', 
                                              lazy=True)
+    
+    # conversations = db.relationship()
 
     comments = db.relationship('Comment', backref='user')
     # posts relationship
