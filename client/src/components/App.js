@@ -5,6 +5,7 @@ import Home from './Home';
 import ForYou from './ForYou';
 import Search from './Search';
 import Settings from './Settings';
+import Notifications from './Notifications';
 
 import ProfilePage from './ProfilePage';
 import Create from './Create';
@@ -50,7 +51,8 @@ function App() {
           <Route path='/posts/:postId' element={<PostCard setRefreshStage={setRefrehState} refreshState={refreshState} />} />
           <Route path='/create' element={<Create />} />
           <Route path='/search' element={<Search />} />
-          <Route path='Settings' element={<Settings />} />
+          <Route path='/settings' element={<Settings />} />
+          <Route path='/notifications' element={<Notifications />} />
 
 
         </Routes>

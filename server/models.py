@@ -11,14 +11,6 @@ from config import db, bcrypt
 
 
 
-notification = db.Table('notifications',
-                    db.Column('id', db.Integer, primary_key=True),
-                    db.Column('receiving_user_id', db.Integer, db.ForeignKey('users.id')),
-                    db.Column('action_user_id', db.Integer, db.ForeignKey('users.id')),
-                    db.Column('post_id', db.Integer, db.ForeignKey('posts.id')),
-                    db.Column('action', db.String),
-                    db.Column('seen', db.Boolean)
-                    )
 
 
 
@@ -27,10 +19,30 @@ following = db.Table('following',
                     db.Column('followed_id', db.Integer, db.ForeignKey('users.id'))
                     )
 
+
+
+class Notification(db.Model, SerializerMixin):
+    __tablename__ = 'notifications'
+
+    serialize_rules= ('-receiver', '-giver')
+
+
+    id = db.Column(db.Integer, primary_key=True)
+    receiving_user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    action_user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    post_id = db.Column(db.Integer, db.ForeignKey('posts.id'))
+    action = db.Column(db.String)
+    seen = db.Column(db.Boolean, default=False)
+
+
+
+
+
+
 class User(db.Model, SerializerMixin):
     __tablename__= 'users'
 
-    serialize_rules= ('-_password_hash', '-following', '-followed_by', '-posts', '-comments')
+    serialize_rules= ('-_password_hash', '-following', '-followed_by', '-posts', '-comments', '-notification_received', '-notification_given')
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, nullable=False)
@@ -40,24 +52,26 @@ class User(db.Model, SerializerMixin):
     bio = db.Column(db.String)
     last_request = db.Column(db.DateTime, default=datetime.utcnow)
 
-
+    notifications_received = db.relationship('Notification', 
+                                             foreign_keys='Notification.receiving_user_id', 
+                                             backref='receiver', 
+                                             lazy=True)
+    notifications_given = db.relationship('Notification', 
+                                             foreign_keys='Notification.action_user_id', 
+                                             backref='giver', 
+                                             lazy=True)
 
     comments = db.relationship('Comment', backref='user')
     # posts relationship
     posts = db.relationship('Post', backref='user', lazy=True)
-    # followers relationship
+  
     following = db.relationship('User', 
                                 secondary=following,
                                 primaryjoin=(following.c.followed_id == id),
                                 secondaryjoin=(following.c.follower_id == id),
                                 backref=db.backref('followed_by',))
     
-    # followers relationship
-    notification_given = db.relationship('User', 
-                                secondary=notification,
-                                primaryjoin=(notification.c.action_user_id == id),
-                                secondaryjoin=(notification.c.receiving_user_id == id),
-                                backref=db.backref('notification_received',))
+
     
     @hybrid_property
     def password_hash(self):
