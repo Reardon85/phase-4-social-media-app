@@ -7,7 +7,7 @@ from flask import request, make_response, abort, jsonify, render_template, sessi
 from flask_restful import  Resource
 from sqlalchemy.exc import IntegrityError
 from models import User, Post, Comment, Like, following, Notification
-from config import app, db, api
+from config import app, db, api, asc, desc
 
 
 
@@ -16,8 +16,9 @@ def get_notifications():
     the_user =User.query.filter_by(id=session['user_id']).first()
     the_user.update_activity()
 
+    notifications = Notification.query.filter_by(receiving_user_id=session['user_id']).order_by(desc(Notification.created_date)).limit(8).all()
     notification_list = []
-    for notification in the_user.notifications_received:
+    for notification in notifications:
         image = ''
         if notification.post_id:
             print(notification.post_id)
@@ -30,7 +31,10 @@ def get_notifications():
             'image': image
         }
         notification_list.append(notification_dict)
+        notification.seen = True
+        db.session.add(notification)
 
+    db.session.commit()
     return make_response(notification_list, 200)
     
 
@@ -484,22 +488,22 @@ api.add_resource(Likes_By_Id, '/likes/<int:id>')
 def add_notification(type, the_user, receiving_user_id, post_id=False):
 
     action_list = [
-        "liked your photo",
-        'started following you',
-        'commented on your photo'
+        " liked your photo ",
+        ' started following you ',
+        ' commented on your photo '
     ]
+    if not the_user.id == receiving_user_id:
+        new_notification = Notification(
+            receiving_user_id= receiving_user_id,  
+            action_user_id= session['user_id'],  
+            post_id= post_id, 
+            action= action_list[type], 
+            seen= False       
+        )
 
-    new_notification = Notification(
-         receiving_user_id= receiving_user_id,  
-        action_user_id= session['user_id'],  
-        post_id= post_id, 
-        action= action_list[type], 
-        seen= False       
-    )
 
-
-    db.session.add(new_notification)
-    db.session.commit()
+        db.session.add(new_notification)
+        db.session.commit()
 
 
 

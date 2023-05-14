@@ -33,6 +33,7 @@ class Notification(db.Model, SerializerMixin):
     post_id = db.Column(db.Integer, db.ForeignKey('posts.id'))
     action = db.Column(db.String)
     seen = db.Column(db.Boolean, default=False)
+    created_date = db.Column(db.DateTime, default=datetime.utcnow)
 
 
 

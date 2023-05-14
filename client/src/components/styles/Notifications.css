@@ -1,0 +1,56 @@
+
+.notification-container {
+    display: flex;
+    flex-direction: column;
+   
+    justify-content: left;
+    height: 90vh;
+    width: 600px;
+    background-color: #f5f5f5;
+    border-radius: 20px;
+    box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.3);
+    margin: auto;
+    margin-top: 1%;
+    margin-left: 43%;
+}
+
+.notification-div {
+    margin-top: 30px;
+    margin-left: 10vh;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    text-align: left;
+    
+}
+
+
+.notification-div-unseen {
+    margin-top: 30px;
+    margin-left: 10vh;
+    color: #97b175;
+    text-shadow: 2px 2px 2px #c5ddba;
+    font-weight: 600;
+    text-align: center;
+    display: flex;
+    align-items:center;
+    justify-content: left;
+
+    
+}
+
+.post-notification-photo {
+    width: 50px;
+    height: 50px;
+    margin-left: 15px;
+    object-fit: cover;
+}
+
+
+.user-notification-photo {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 15px;
+    object-fit: cover;
+}
