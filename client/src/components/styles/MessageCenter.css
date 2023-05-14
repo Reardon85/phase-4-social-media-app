@@ -1,0 +1,56 @@
+.post-container {
+    flex-wrap: nowrap;
+    display: flex;
+
+    justify-content: space-between;
+    gap: 20px;
+    /* Adjust this value for the desired space between the post card and the comment form */
+}
+
+
+
+
+.discussion-card {
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+
+    flex-basis: 40%;
+    min-width: 40vh;
+    max-width: 0px;
+    width: 0px;
+
+    text-align: center;
+    border: 1px solid #ccccccf0;
+    padding: 20px;
+    background-color: #fff;
+    margin-left: 25%;
+    max-height: 800px;
+    margin-top: 70px;
+
+}
+
+
+.message-form-container {
+    flex-basis: 60%;
+    /* Adjust this value for the desired width of the comment form */
+    min-width: 400px;
+
+
+    background-color: #c5ddba;
+    border-radius: 4px;
+    padding: 40px;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.243);
+    max-height: 90vh;
+    max-width: 80vh;
+    margin-right: 5%;
+    /* border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px; */
+    margin-top: 70px;
+    overflow-y: auto
+        /* slide in animation */
+    ;
+}

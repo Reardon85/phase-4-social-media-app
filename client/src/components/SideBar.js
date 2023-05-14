@@ -70,6 +70,10 @@ function SideBar({ onLogout, user }) {
                 <img src={activeNotification ? "/images/home.png" : "/images/foryou.png"  } alt="Home Icon" className='icons' /> Notifications
             </NavLink>
 
+            <NavLink exact to="/messages" activeClassName="active"  className={activeNotification ? 'active-notify' : 'inactive-notify'}>
+                <img src={activeNotification ? "/images/home.png" : "/images/foryou.png"  } alt="Home Icon" className='icons' /> Messages
+            </NavLink>
+
             <NavLink to={`/create`} activeClassName="active"> 
 
                 <img src="/images/plus.png" alt="Home Icon" className='icons' /> Create Post
