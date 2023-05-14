@@ -16,19 +16,22 @@ def get_notifications():
     the_user =User.query.filter_by(id=session['user_id']).first()
     the_user.update_activity()
 
-    
+    notification_list = []
     for notification in the_user.notifications_received:
-        
+        image = ''
         if notification.post_id:
             print(notification.post_id)
+            post = Post.query.filter_by(id=notification.post_id).first()
+            image = post.image
 
         notification_dict = {
             **notification.to_dict(),
             **notification.giver.to_dict(only=('avatar_url', 'username' )),
-
+            'image': image
         }
+        notification_list.append(notification_dict)
 
-    return make_response('', 200)
+    return make_response(notification_list, 200)
     
 
 
@@ -486,15 +489,16 @@ def add_notification(type, the_user, receiving_user_id, post_id=False):
         'commented on your photo'
     ]
 
-    new_notification = {
-        'receiving_user_id': receiving_user_id,  
-        'action_user_id': session['user_id'],  
-        'post_id': post_id, 
-        'action': action_list[type], 
-        'seen': False
-    }
+    new_notification = Notification(
+         receiving_user_id= receiving_user_id,  
+        action_user_id= session['user_id'],  
+        post_id= post_id, 
+        action= action_list[type], 
+        seen= False       
+    )
 
-    db.session.execute(notification.insert().values(**new_notification))
+
+    db.session.add(new_notification)
     db.session.commit()
 
 
