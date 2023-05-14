@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import CommentForm from './CommentForm';
 import "./styles/PostCard.css";
 
@@ -8,6 +8,7 @@ function PostCard() {
     const [likes, setlikes] = useState(0)
     const [like, setlike] = useState(false)
     const { postId } = useParams()
+    const navigate = useNavigate()
     const [postInfo, setPostInfo] = useState([])
 
     useEffect(() => {
@@ -20,7 +21,7 @@ function PostCard() {
 
                         setlikes(d.like_count)
                         setlike(d.liked)
-                        setPostInfo([d.id, d.avatar_url, d.username, d.user_id, d.image, d.content, d.date_posted])
+                        setPostInfo([d.id, d.avatar_url, d.username, d.user_id, d.image, d.content, d.date_posted, d.my_post])
 
                     })
                 }
@@ -30,6 +31,20 @@ function PostCard() {
 
     }, [postId])
   
+
+
+
+    const handleDelete = () => {
+
+        fetch(`/posts/${postId}`, {
+            method: "DELETE",
+        })
+        .then((r) => {
+            if (r.ok){
+                navigate('/')
+            }
+        })
+    }
 
 
     let semaphore = true
@@ -98,11 +113,20 @@ function PostCard() {
                     
                     <h3 className='date-title'>{postInfo[6]}</h3>
                     {/* <button className="comment-btn"><i className="fas fa-comment"></i> Comment</button> */}
+                    { postInfo[7] ?
+                    <button className="delete-btn" onClick={() => handleDelete()}>
+                     Delete Post
+                    </button>
+                    :
+                    ''
+                    }
 
                 </div>
+                
             </div>
             <div className="comment-form-container">
                 <CommentForm postId={postId} />
+
             </div>
 
         </div>

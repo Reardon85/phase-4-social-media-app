@@ -358,8 +358,12 @@ api.add_resource(Posts, '/posts')
 class PostsById(Resource):
     def get(self, id):
         post = Post.query.filter_by(id = id).first()
+        my_post = False
         if post == None:
             return make_response({"error": "Post not found"}, 404)
+        
+        if post.user_id == session['user_id']:
+            my_post = True
         
 
         liked = Like.query.filter_by(post_id=id).filter_by(user_id=session['user_id']).first()
@@ -370,14 +374,12 @@ class PostsById(Resource):
         
         user_dict = {
             'avatar_url': post.user.avatar_url,
-            'username': post.user.username
+            'username': post.user.username,
+            'my_post': my_post
         }
         
         
         return make_response({**post.to_dict(rules=('like_count',)), **like_dict, ** user_dict}, 200)
-# do we need to get a post by id?
-# - Good point. I guess it depends on how we impliment the whole clicking on a post and making it bigger thing?
-# But you're right, if they are clicking on the post then that means react already has the post's information. 
 
     def delete(self, id):
         post = Post.query.filter_by(id = id).first()
@@ -483,6 +485,18 @@ class Likes_By_Id(Resource):
 
         return make_response({"message":"Like Successfully Deleted"}, 204)
 api.add_resource(Likes_By_Id, '/likes/<int:id>')
+
+
+
+@app.route('/active-notifications')
+def active_notfication():
+
+    notification = Notification.query.filter_by(receiving_user_id=session['user_id']).filter_by(seen=False).first()
+
+    if notification:
+        return make_response({'active': True}, 200)
+    
+    return make_response({'active': False}, 200)
 
 
 def add_notification(type, the_user, receiving_user_id, post_id=False):

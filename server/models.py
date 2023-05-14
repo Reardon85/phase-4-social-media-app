@@ -24,7 +24,7 @@ following = db.Table('following',
 class Notification(db.Model, SerializerMixin):
     __tablename__ = 'notifications'
 
-    serialize_rules= ('-receiver', '-giver')
+    serialize_rules= ('-receiver', '-giver', '-post')
 
 
     id = db.Column(db.Integer, primary_key=True)
@@ -135,7 +135,7 @@ class User(db.Model, SerializerMixin):
 class Post(db.Model, SerializerMixin):
     __tablename__= 'posts'
 
-    serialize_rules= ('-user', '-likes', '-comments')
+    serialize_rules= ('-user', '-likes', '-comments', '-notifications')
 
     id = db.Column(db.Integer, primary_key=True)
     image = db.Column(db.String, nullable=False)
@@ -147,10 +147,17 @@ class Post(db.Model, SerializerMixin):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
     # comments relationship
-    comments = db.relationship('Comment', backref='post',)
+    comments = db.relationship('Comment', backref='post', cascade='all, delete, delete-orphan')
 
     # likes relationship
-    likes = db.relationship('Like', backref='post', )
+    likes = db.relationship('Like', backref='post', cascade='all, delete, delete-orphan' )
+
+    notifications = db.relationship('Notification', 
+                                             foreign_keys='Notification.post_id', 
+                                             backref='post', 
+                                             lazy=True,
+                                             cascade='all, delete, delete-orphan')
+
 
     def like_count(self):
         return len(self.likes)
