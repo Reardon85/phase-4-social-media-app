@@ -283,6 +283,7 @@ with app.app_context():
     Like.query.delete()
     Post.query.delete()
     User.query.delete()
+    
     db.session.commit()
 
 
