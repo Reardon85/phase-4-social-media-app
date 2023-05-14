@@ -13,7 +13,7 @@ function Notifications() {
 
   useEffect(()=> {
 
-    fetch('/notifications')
+    fetch('/notification')
     .then((r)=> r.json())
     .then((d)=> {
  
