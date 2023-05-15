@@ -30,7 +30,7 @@ const [notificationList, setNotificationList] = useState([])
 
     const notificationArray = notificationList.map((n) => ( 
       <div className={n.seen === true ? 'notification-div' : 'notification-div-unseen'}> 
-        <Link to={`/users/${n.action_user_id}`}   style={{ textDecoration: 'none', color: 'inherit' }}>
+        <Link to={`/profile/${n.action_user_id}`}   style={{ textDecoration: 'none', color: 'inherit' }}>
           <img src={n.avatar_url} alt=''  className='user-notification-photo'/>
         </Link>
         {n.username}
