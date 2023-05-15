@@ -63,3 +63,7 @@ select {
 button[type="submit"]:hover {
     background-color: #27ae60;
 } */
+
+.delete-btn button {
+    margin-top: 20px;
+}

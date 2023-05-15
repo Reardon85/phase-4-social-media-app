@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useParams} from 'react-router-dom';
 import SideBar from './SideBar';
 import Home from './Home';
 import ForYou from './ForYou';
@@ -22,6 +22,7 @@ import PostCard from './PostCard';
 
 function App() {
 
+  const param = useParams()
   const [user, setUser] = useState(null)
   const [refreshState, setRefrehState] = useState(false)
 
@@ -52,7 +53,7 @@ function App() {
           <Route path='/posts/:postId' element={<PostCard setRefreshStage={setRefrehState} refreshState={refreshState} />} />
           <Route path='/create' element={<Create />} />
           <Route path='/search' element={<Search />} />
-          <Route path='/settings' element={<Settings />} />
+          <Route path='/settings' element={<Settings onAcctDelete={setUser} user={user} />} />
           <Route path='/notifications' element={<Notifications />} />
           <Route path='/messages' element={<MessageCenter />} />
 

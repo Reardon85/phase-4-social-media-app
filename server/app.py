@@ -6,7 +6,7 @@ load_dotenv()
 from flask import request, make_response, abort, jsonify, render_template, session
 from flask_restful import  Resource
 from sqlalchemy.exc import IntegrityError
-from models import User, Post, Comment, Like, following, Notification
+from models import User, Post, Comment, Like, following, Notification, Conversation, Message
 from config import app, db, api, asc, desc
 
 
@@ -195,6 +195,21 @@ class Users(Resource):
         total = len(users)
         total_dict = {"total": total, "users": users}
         return make_response(total_dict, 200)
+    
+    def delete(self):
+        user = User.query.filter_by(id=session['user_id']).first()
+
+        if user == None:
+            return make_response({"error": "User not found"}, 404)
+        
+        db.session.query(following).filter_by(followed_id=user.id).delete()
+        db.session.query(following).filter_by(follower_id=user.id).delete()
+
+
+        session['user_id'] = None
+        db.session.delete(user)
+        db.session.commit()
+        return make_response('Account deleted successfully', 200)
 api.add_resource(Users, '/users')
 
 class Users_By_Id(Resource):
@@ -234,13 +249,7 @@ class Users_By_Id(Resource):
         }   
         return make_response(profile_dict, 200)
     
-    def delete(self, id):
-        user = User.query.filter_by(id = id).first()
-        if user == None:
-            return make_response({"error": "User not found"}, 404)
-        db.session.delete(user)
-        db.session.commit()
-        return make_response('Account deleted successfully', 200)
+
     
     def patch(self, id):
         the_user = User.query.filter_by(id=session['user_id']).first()
@@ -264,7 +273,6 @@ class Home_Results(Resource):
         the_user = User.query.filter_by(id=session['user_id']).first()
         the_user.update_activity()
 
-        
 
         user_id = session['user_id']
 
@@ -410,8 +418,6 @@ api.add_resource(Comments, '/comments')
 class CommentsById(Resource):
     def get(self, id):
 
-        test = Comment.query.all()
-        print(test)
         
         comments_list =[{**comment.to_dict(), **comment.user.to_dict(only=('avatar_url', "username")) } for comment in Comment.query.filter(Comment.post_id == id).all()]
 
@@ -487,16 +493,116 @@ class Likes_By_Id(Resource):
 api.add_resource(Likes_By_Id, '/likes/<int:id>')
 
 
+class Messages(Resource):
+    def get(self):
+        the_user = User.query.filter_by(id=session['user_id']).first()
+        the_user.update_activity()
+        convos = the_user.conversations
+
+        first_convo_id = ''
+        first_convo_mes = ''
+
+        if convos:
+            first_convo_id = convos[0].id
+            first_convo_mes = convos[0].to_dict(only=('messages',))
+
+        convos_list = []
+
+        for convo in convos:
+            if the_user.id == convo.user_one_id:
+                other_user = User.query.filter_by(id=convo.user_two_id).first()
+            else:
+                other_user = User.query.filter_by(id=convo.user_one_id).first()
+            convo_dict = {**convo.to_dict(), **other_user.to_dict(only=('avatar_url', 'username'))}
+            convos_list.append(convo_dict)
+        
+        return make_response({'convo_id': first_convo_id, 'messages': first_convo_mes, 'list':convos_list}, 200)
+    
+    def post(self):
+        data = request.get_json()
+
+        if session['user_id'] > int(data['userId']):
+            user_1  = data['userId']
+            user_2 = session['user_id']
+        else:
+            user_2  = data['userId']
+            user_1 = session['user_id']
+
+        convo = Conversation.query.filter_by(user_one_id=user_1).filter_by(user_two_id=user_2).first()
+
+        if not convo:
+            convo = Conversation(user_one_id=user_1, user_two_id=user_2)
+        
+        db.session.add(convo)
+        db.session.commit()
+        convo.update_timestamp()
+
+        return make_response(convo.to_dict(), 201)
+api.add_resource(Messages,'/message')
+
+
+
+class Message_By_Id(Resource):
+    def get(self, id):
+        convo = Conversation.query.filter_by(id=id).first()
+        if session['user_id'] == convo.user_one_id:
+            convo.user_one_seen = True
+        else:
+            convo.user_two_seen = True
+        db.session.add(convo)
+        db.session.commit()
+
+        message_list =[{**message.to_dict(), **message.user.to_dict(only=('avatar_url', "username")) } for message in Message.query.filter(Message.conversation_id == id).all()]
+
+        return make_response(message_list, 200)
+
+    def post(self, id):
+        data = request.get_json()
+        the_user = User.query.filter_by(id=session['user_id']).first()
+        the_user.update_activity()
+        print("hello")
+        
+        try:
+            message = Message(text = data['text'], conversation_id=data['convoId'], user_id= session['user_id'])
+
+
+            
+            db.session.add(message)
+            db.session.commit()
+            convo =  message.conversation
+
+            if session['user_id'] == convo.user_one_id:
+                convo.user_two_seen = False
+            else:
+                convo.user_one_seen = False
+            db.session.add(convo)
+            db.session.commit()
+            return make_response({**message.to_dict(), **the_user.to_dict(only=('avatar_url', 'username'))}, 201)
+        except Exception as ex:
+            return make_response({'error': [ex.__str__()]}, 422)
+
+api.add_resource(Message_By_Id, '/message/<int:id>')
+
+        
+
 
 @app.route('/active-notifications')
 def active_notfication():
 
     notification = Notification.query.filter_by(receiving_user_id=session['user_id']).filter_by(seen=False).first()
-
+    convo_one = Conversation.query.filter_by(user_one_id=session['user_id']).filter_by(user_one_seen=False).first()
+    convo_two = Conversation.query.filter_by(user_two_id=session['user_id']).filter_by(user_two_seen=False).first()
+    notif_dict = {'notifActive': False}
+    convo_dict = {'convoActive': False}
+    print(convo_one)
+    print(convo_two)
     if notification:
-        return make_response({'active': True}, 200)
+        notif_dict = {'notifActive': True}
+
+    if convo_one or convo_two:
+        convo_dict = {'convoActive': True}
     
-    return make_response({'active': False}, 200)
+    return make_response({**notif_dict, **convo_dict}, 200)
 
 
 def add_notification(type, the_user, receiving_user_id, post_id=False):
