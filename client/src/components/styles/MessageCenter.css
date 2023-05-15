@@ -56,8 +56,9 @@
 }
 
 .conversation-div {
-    margin-top: 30px;
+    margin-top: 10px;
     min-width: 30vh;
+    min-height: 8vh;
     display: flex;
     align-items: center;
     text-align: left;
@@ -72,15 +73,17 @@
   }
 
 .conversation-div-unseen {
-    margin-top: 30px;
-    margin-left: 10vh;
-    color: #97b175;
-    text-shadow: 2px 2px 2px #c5ddba;
+    margin-top: 10px;
+    min-width: 30vh;
+    min-height: 8vh;
+    border-top-right-radius: 20%;
+    border-bottom-right-radius: 20%;
+    background-color: #97b175;
     font-weight: 600;
-    text-align: center;
+    text-align: left;
     display: flex;
     align-items:center;
-    justify-content: left;
+
 
     
 }
