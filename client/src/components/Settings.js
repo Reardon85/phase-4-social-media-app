@@ -1,40 +1,42 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import "./styles/Settings.css"
 
-function Settings() {
+function Settings({user, onAcctDelete}) {
 
 
 
-
+  const navigate = useNavigate()
   const [file, setFile] = useState(null);
-  const [email, setEmail] = useState('');
-  const [bio, setBio] = useState('');
-  const [profilePic, setProfilePic] = useState(null);
+  const [email, setEmail] = useState(user.email);
+  const [bio, setBio] = useState(user.bio);
+  const [profilePic, setProfilePic] = useState(user.avatar_url);
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
 
 
 
 
-  useEffect(()=> {
-
-    fetch('/update-profile')
-    .then((r)=> r.json())
-    .then((d)=> {
-      setBio(d.bio)
-      setEmail(d.email)
-      setProfilePic(d.avatar_url)
-    })
-
-
-  },[])
-  console.log(profilePic)
-
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
     setFile(selectedFile);
   };
 
+  const handleDelete = () =>{
+
+    fetch('/users', {
+      method: 'DELETE',
+    })
+    .then((r) => {
+      if (r.ok){
+        navigate('/')
+        onAcctDelete('none')
+      }
+      r.json().then((d) => console.log(d))
+    })
+
+  }
+  console.log(user)
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -116,6 +118,7 @@ onfocus="this.removeAttribute('readonly');" />
       <h4>Bio:</h4>
       <input onChange={handleBioChange} type="text" value={bio} />
       <button onClick={handleSubmit}>Update</button>
+      <button onClick={handleDelete} className='delete-btn'>Delete Account</button>
     </div>
   );
 }

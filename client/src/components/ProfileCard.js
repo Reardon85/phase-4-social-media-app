@@ -12,6 +12,35 @@ function ProfileCard({ profileInfo, amFollowing, setRefrehState, userId}) {
         navigate("/settings")
     }
 
+
+    const handleMessages = () => {
+
+       const postObj = {
+            userId: userId
+        }
+
+        if (amFollowing[0]){
+            navigate('/messages')
+        }
+        else{
+
+            fetch('/message', {
+                method: "POST",
+                headers:{
+                    "Content-Type":'application/json'
+                },
+                body: JSON.stringify(postObj), 
+            })
+            .then((r) =>{
+                if(r.ok){
+                    navigate('/messages')
+                }
+            })
+        }
+    }
+
+
+
     function handleFollow(following) {
         if (following) {
             fetch(`/follow/${userId}`, {
@@ -75,6 +104,7 @@ function ProfileCard({ profileInfo, amFollowing, setRefrehState, userId}) {
                             :
                             <button onClick={() => { handleFollow(false) }} class="card__action__button card__action--message">Follow</button>
                     }
+                    <button onClick={() => { handleMessages(false) }} class="card__action__button card__action--message">{amFollowing[0] ? 'Messages' : 'Message'}</button>
                 </div>
             </div>
         </main>

@@ -2,7 +2,7 @@ from sqlalchemy.ext.hybrid import hybrid_property
 from datetime import datetime, timedelta
 from sqlalchemy.orm import validates
 from sqlalchemy_serializer import SerializerMixin
-from config import db, bcrypt
+from config import db, bcrypt, CheckConstraint, or_
 
 
 
@@ -44,17 +44,31 @@ class Conversation(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     user_one_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     user_two_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    user_one_seen = db.Column(db.Boolean, default=False)
+    user_two_seen = db.Column(db.Boolean, default=False)
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
 
     messages = db.relationship('Message', backref='conversation', cascade="all, delete, delete-orphan")
 
+
+    def update_timestamp(self):
+        self.updated_at = db.func.now()
+        db.session.add(self)
+        db.session.commit()
+    
+    __table_args__ = (
+        CheckConstraint(user_one_id != user_two_id, name='check_different_users'),
+        )
+
+
+
 class Message(db.Model, SerializerMixin):
     __tablename__ = "messages"
 
-    serialize_rules=('-conversation',)
+    serialize_rules=('-conversation', '-user')
 
     id = db.Column(db.Integer, primary_key=True)
-    conversation_id = db.Column(db.Integer, db.ForeignKey('conversations.id'), nullable=False)
+    conversation_id = db.Column(db.Integer, db.ForeignKey('conversations.id', ondelete='CASCADE'))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     text = db.Column(db.String, nullable=False)
     created_at = db.Column(db.DateTime, server_default = db.func.now())
@@ -67,7 +81,7 @@ class Message(db.Model, SerializerMixin):
 class User(db.Model, SerializerMixin):
     __tablename__= 'users'
 
-    serialize_rules= ('-_password_hash', '-following', '-followed_by', '-posts', '-comments', '-notification_received', '-notification_given', '-conversations')
+    serialize_rules= ('-_password_hash', '-following', '-followed_by', '-posts', '-comments', '-notification_received', '-notification_given', '-conversations', '-messages')
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, nullable=False)
@@ -77,28 +91,36 @@ class User(db.Model, SerializerMixin):
     bio = db.Column(db.String)
     last_request = db.Column(db.DateTime, default=datetime.utcnow)
 
-    # conversations = db.relationship("Conversation", foreign_keys=[Conversation.user_one_id, Conversation.user_two_id])
+    conversations = db.relationship("Conversation", 
+                                    primaryjoin="or_(User.id==Conversation.user_one_id, User.id==Conversation.user_two_id)",
+                                    order_by="desc(Conversation.updated_at)"
+                                    )
 
     notifications_received = db.relationship('Notification', 
                                              foreign_keys='Notification.receiving_user_id', 
                                              backref='receiver', 
-                                             lazy=True)
+                                             lazy=True,
+                                             cascade="all, delete, delete-orphan")
     notifications_given = db.relationship('Notification', 
                                              foreign_keys='Notification.action_user_id', 
                                              backref='giver', 
-                                             lazy=True)
+                                             lazy=True,
+                                             cascade="all, delete, delete-orphan")
     
     # conversations = db.relationship()
-
-    comments = db.relationship('Comment', backref='user')
+    messages = db.relationship('Message', backref='user', cascade="all, delete, delete-orphan")
+    comments = db.relationship('Comment', backref='user', cascade="all, delete, delete-orphan")
     # posts relationship
-    posts = db.relationship('Post', backref='user', lazy=True)
+    posts = db.relationship('Post', backref='user', lazy=True, cascade="all, delete, delete-orphan")
+
+    likes = db.relationship('Like', backref='user', cascade="all, delete, delete-orphan")
   
     following = db.relationship('User', 
                                 secondary=following,
                                 primaryjoin=(following.c.followed_id == id),
                                 secondaryjoin=(following.c.follower_id == id),
-                                backref=db.backref('followed_by',))
+                                backref=db.backref('followed_by',),
+                                cascade="all, delete")
     
 
     

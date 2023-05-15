@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import { useFormik } from "formik";
 
 import { Button, Form, Grid, Header, Message, Segment } from 'semantic-ui-react'
@@ -69,10 +68,13 @@ function Login({ onLogin }) {
                 <Grid textAlign='center' style={{ height: '100vh' }} verticalAlign='middle'>
                     <Grid.Column style={{ maxWidth: 850, margin: 'auto' }}>
                         <Form size='large' onSubmit={formik.handleSubmit}>
-                            <Header as='h2' color='black' textAlign='center'>
-                                {/* <Image src={logo}  /> */} Log In
-                            </Header>
-                            <Segment stacked>
+                        <Segment stacked>
+                        <Header as='h1' style={{ fontFamily: 'Playfair Display, serif', color: '#5c6649', textAlign: 'center' }}>
+                            The Tea
+                        </Header>
+                        <Header as='h2' color='black' textAlign='center'>
+                            Log In
+                        </Header>
                                 <Form.Input
                                     fluid icon='user'
                                     iconPosition='left'

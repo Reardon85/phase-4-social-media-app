@@ -9,22 +9,27 @@ import SearchResult from './SearchResult';
 
 function SideBar({ onLogout, user }) {
 
-    const param = useParams()
-    const navigate = useNavigate()
 
-    const [activeNotification, setActiveNotification] = useState(false)
+    const navigate = useNavigate()
+    
+    const [activeNotification, setActiveNotification] = useState([false, false])
+
+    
+
 
 
     useEffect(() => {
 
+
+
         fetch('/active-notifications')
             .then((r) => r.json())
-            .then((d) => setActiveNotification(d['active']))
+            .then((d) => setActiveNotification([d['notifActive'], d['convoActive']]))
 
 
 
-    }, [param])
-
+    }, [navigate])
+   
 
     const handleclick = () => {
 
@@ -39,7 +44,7 @@ function SideBar({ onLogout, user }) {
 
     }
 
-
+    console.log(activeNotification)
 
     return (
         <div className="sidebar">
@@ -66,12 +71,12 @@ function SideBar({ onLogout, user }) {
 
             </NavLink>
 
-            <NavLink exact to="/notifications" activeClassName="active" className={activeNotification ? 'active-notify' : 'inactive-notify'}>
-                <img src={activeNotification ? "/images/notification-active.png" : "/images/notification.png"} alt="Home Icon" className='icons' /> Notifications
+            <NavLink exact to="/notifications" activeClassName="active" className={activeNotification[0] ? 'active-notify' : 'inactive-notify'}>
+                <img src={activeNotification[0] ? "/images/notification-active.png" : "/images/notification.png"} alt="Home Icon" className='icons' /> Notifications
             </NavLink>
 
-            <NavLink exact to="/messages" activeClassName="active" className={activeNotification ? 'active-notify' : 'inactive-notify'}>
-                <img src={activeNotification ? "/images/home.png" : "/images/message.png"} alt="Home Icon" className='icons' /> Messages
+            <NavLink exact to="/messages" activeClassName="active" className={activeNotification[1] ? 'active-notify' : 'inactive-notify'}>
+                <img src={activeNotification[1] ? "/images/message-active.png" : "/images/message.png"} alt="Home Icon" className='icons' /> Messages
             </NavLink>
 
             <NavLink to={`/create`} activeClassName="active">

@@ -16,10 +16,10 @@ const CommentForm = ({ postId }) => {
 
 
   }, [postId])
-
+  
 
   const comment_array = commentList.map((c) => {
-    return <Comment key={c.id} username={c.username} avatar={c.avatar_url} timestamp={c.date_posted} content={c.content} />
+    return <Comment key={c.id} username={c.username} avatar={c.avatar_url} timestamp={c.date_posted} content={c.content} userId={c.user_id} />
   })
 
   const handleSubmit = (event) => {
