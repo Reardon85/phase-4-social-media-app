@@ -23,7 +23,7 @@ function MessageCenter() {
     
     console.log("hello")
     const convoArray = conversations.map((convo) => (
-      <div className='conversation-div' onClick={()=> setConvoId(convo.id)}>
+      <div className={convo.seen ? 'conversation-div' : 'conversation-div-unseen'} onClick={()=> setConvoId(convo.id)}>
         <img src={convo.avatar_url} alt='profile' className='user-convo-photo' />
         {convo.username}
       </div>

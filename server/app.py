@@ -511,9 +511,11 @@ class Messages(Resource):
         for convo in convos:
             if the_user.id == convo.user_one_id:
                 other_user = User.query.filter_by(id=convo.user_two_id).first()
+                seen = {'seen': convo.user_one_seen}
             else:
                 other_user = User.query.filter_by(id=convo.user_one_id).first()
-            convo_dict = {**convo.to_dict(), **other_user.to_dict(only=('avatar_url', 'username'))}
+                seen = {'seen': convo.user_two_seen}
+            convo_dict = {**convo.to_dict(), **seen, **other_user.to_dict(only=('avatar_url', 'username'))}
             convos_list.append(convo_dict)
         
         return make_response({'convo_id': first_convo_id, 'messages': first_convo_mes, 'list':convos_list}, 200)
