@@ -16,7 +16,7 @@ def get_notifications():
     the_user =User.query.filter_by(id=session['user_id']).first()
     the_user.update_activity()
 
-    notifications = Notification.query.filter_by(receiving_user_id=session['user_id']).order_by(desc(Notification.created_date)).all()
+    notifications = Notification.query.filter_by(receiving_user_id=session['user_id']).order_by(desc(Notification.created_date)).limit(8).all()
     notification_list = []
     for notification in notifications:
         image = ''
