@@ -2,7 +2,7 @@
 .notification-container {
     display: flex;
     flex-direction: column;
-   
+    overflow-y: auto;
     justify-content: left;
     height: 90vh;
     width: 600px;
